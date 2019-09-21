@@ -99,7 +99,43 @@ void IntListInsert (IntList L, int v)
 void IntListInsertInOrder (IntList L, int v)
 {
 	// This is INCORRECT
+	// IntListInsert (L, v);
+	assert(L != NULL);
+
+	
+	// Empty list 
+	if (L->size == 0)
+	{
+		IntListInsert(L, v);
+		return;
+	}
+	struct IntListNode *n = newIntListNode (v);
+	// Check if v is less than the first node 
+	if (v <= L->first->data)
+	{
+		n->next = L->first;
+		L->first = n;
+		L->size++;
+		return;
+	}
+	
+	struct IntListNode *prev;
+	prev = L->first;
+	
+	for (int i = 0; i < (L->size - 1); i++)
+	{
+		if (v < prev->next->data)
+		{
+			n->next = prev->next;
+			prev->next = n;
+			L->size++;
+			return;
+		}
+		prev = prev->next;
+	}
+	free(n);
 	IntListInsert (L, v);
+
 }
 
 /** Delete first occurrence of `v` from an IntList.
