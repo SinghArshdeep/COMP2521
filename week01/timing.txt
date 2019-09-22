@@ -1,14 +1,31 @@
-Input	Initial	Has	Number	AvgTime	AvgTime
-Size	Order	Dups	of runs	forusel	forsort
-5000	random	no	N	T1sec	T2sec
-5000	sorted	no	N	T1sec	T2sec
-5000	reverse	no	N	T1sec	T2sec
-5000	random	yes	N	T1sec	T2sec
-5000	sorted	yes	N	T1sec	T2sec
-5000	reverse	yes	N	T1sec	T2sec
-10000	random	no	N	T1sec	T2sec
-10000	sorted	no	N	T1sec	T2sec
-10000	reverse	no	N	T1sec	T2sec
-10000	random	yes	N	T1sec	T2sec
-10000	sorted	yes	N	T1sec	T2sec
-10000	reverse	yes	N	T1sec	T2sec
+Input	Initial	    Has	    Number	    AvgTime	    AvgTime
+Size	Order	    Dups	of runs	    for usel    for sort
+
+1000	random	    yes	        3	    0.003s	    0.003s
+5000	reverse	    no	        5	    0.004s	    0.006s
+5000	random  	yes      	4	    0.028s	    0.007s
+5000	sorted	    yes	        3	    0.004s	    0.007s
+10000	sorted	    no	        4	    0.007s  	0.011s
+10000	reverse	    no	        4	    0.007s  	0.011s
+10000	random  	no	        4	    0.100s	    0.012s
+10000	random	    yes	        3	    0.101s	    0.013s
+15000	sorted	    no	        4	    0.010s	    0.016s
+15000	reverse	    no	        5	    0.010s	    0.016s
+15000	random	    yes	        4	    0.230s	    0.019s
+30000	sorted	    no	        6       0.017s	    0.031s
+30000	random	    yes	        4	    1.360s	    0.037s
+60000	random	    yes	        5	    8.160s	    0.070s
+60000	sorted	    no	        4	    0.033s	    0.058s
+
+Looking at the data above we can see that it would only make 
+sense to use the useIntList as a sort program if the number of
+values in the list are less than 10000-15000. Since there is 
+not much difference in the timing when compared to the Unix sort 
+command. However, to convert a file from reverse order to proper order, 
+we can use the useIntList as a sort program. If we look at the code, 
+we can find the reason for this as there is a separate condition in 
+the program to deal with sorted or reverse sorted lists. However, the 
+algorithm used in the Unix sort command is much more efficient and hence 
+takes less time for sorting random values. While in the useIntList program, 
+we use a for loop to find the correct position for the value, which 
+is a lot slower for bigger lists. 

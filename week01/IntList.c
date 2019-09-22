@@ -98,30 +98,41 @@ void IntListInsert (IntList L, int v)
 /** Insert an integer into correct place in a sorted IntList. */
 void IntListInsertInOrder (IntList L, int v)
 {
-	// This is INCORRECT
-	// IntListInsert (L, v);
-	assert(L != NULL);
-
-	
 	// Empty list 
 	if (L->size == 0)
 	{
 		IntListInsert(L, v);
 		return;
 	}
-	struct IntListNode *n = newIntListNode (v);
+	// Check if the list is sorted 
+	if (IntListIsSorted(L) != 1)
+	{
+		fprintf(stderr, "List not sorted");
+		return;
+	}
+	
 	// Check if v is less than the first node 
 	if (v <= L->first->data)
 	{
+		struct IntListNode *n = newIntListNode (v);
 		n->next = L->first;
 		L->first = n;
 		L->size++;
 		return;
 	}
+
+	// Add v to the end if it is greatest 
+	if (v >= L->last->data)
+	{
+		IntListInsert (L, v);
+		return;
+	}
 	
 	struct IntListNode *prev;
+	struct IntListNode *n = newIntListNode (v);
 	prev = L->first;
 	
+	// Find the value for v in the list 
 	for (int i = 0; i < (L->size - 1); i++)
 	{
 		if (v < prev->next->data)
@@ -133,8 +144,6 @@ void IntListInsertInOrder (IntList L, int v)
 		}
 		prev = prev->next;
 	}
-	free(n);
-	IntListInsert (L, v);
 
 }
 

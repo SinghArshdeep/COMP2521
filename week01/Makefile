@@ -1,6 +1,6 @@
 # COMP2521 19t1 ... lab 01 Makefile
 
-CC	= 2521 3c
+CC	= gcc
 
 .PHONY: all
 all: useIntList randList
