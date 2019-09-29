@@ -227,7 +227,32 @@ bool DLListMoveTo (DLList L, int i)
 void DLListBefore (DLList L, char *it)
 {
 	assert (L != NULL);
-	/// COMPLETE THIS FUNCTION
+	DLListNode *new = newDLListNode(it);
+	L->nitems++;
+	if (L->curr == NULL)
+	{
+		
+		L->curr = new;
+		L->first = L->last = new;
+		return;
+	}
+	
+	if (L->curr == L->first)
+	{
+		
+		new->next = L->curr;
+		L->curr->prev = new;
+		L->curr = new;
+		L->first = new;
+		return;
+	}
+	
+	new->next = L->curr;
+	new->prev = L->curr->prev;
+	L->curr->prev->next = new;
+	L->curr->prev = new;
+	L->curr = new;
+
 }
 
 /** insert an item after current item
@@ -235,7 +260,29 @@ void DLListBefore (DLList L, char *it)
 void DLListAfter (DLList L, char *it)
 {
 	assert (L != NULL);
-	/// COMPLETE THIS FUNCTION
+	DLListNode *new = newDLListNode(it);
+	L->nitems++;
+	if (L->curr == NULL)
+	{
+		L->curr = new;
+		L->first = L->last = new;
+		return;
+	}
+	
+	if (L->curr == L->last)
+	{
+		new->prev = L->curr;
+		L->curr->next = new;
+		L->curr = new;
+		L->last = new;
+		return;
+	}
+
+	new->prev = L->curr;
+	L->curr->next->prev = new;
+	new->next = L->curr->next;
+	L->curr->next = new;
+	L->curr = new;
 }
 
 /** delete current item
@@ -245,7 +292,34 @@ void DLListAfter (DLList L, char *it)
 void DLListDelete (DLList L)
 {
 	assert (L != NULL);
-	/// COMPLETE THIS FUNCTION
+
+	if (L->nitems == 1)
+	{
+		free(L->curr);
+		L->curr = L->first = L->last = NULL;
+		L->nitems--;
+		return;
+	}
+	if (L->curr == L->last)
+	{
+		DLListNode *temp = L->curr;
+		L->last = temp->prev;
+		L->last->next = NULL;
+		temp->prev = NULL;
+		L->curr = L->last;
+		free(temp);
+		L->nitems--;
+		return;
+	}
+	
+	DLListNode *temp = L->curr;
+	temp->prev->next = temp->next;
+	temp->next->prev = temp->prev;
+	L->curr = temp->next;
+	temp->next = temp->prev = NULL;
+	free(temp);
+	L->nitems--;
+
 }
 
 /** return number of elements in a list */

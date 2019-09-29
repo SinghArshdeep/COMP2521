@@ -13,8 +13,6 @@ int main (void)
 	putDLList (stdout, myList);
 	assert (validDLList (myList));
 
-	// TODO: more tests needed here
-
 	freeDLList (myList);
 	return EXIT_SUCCESS;
 }
