@@ -1,6 +1,6 @@
 # COMP2521 19t1 ... lab 02 makefile
 
-CC	= 2521 3c
+CC	= gcc
 
 .PHONY: all
 all: testList myed

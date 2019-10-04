@@ -236,7 +236,7 @@ void DLListBefore (DLList L, char *it)
 		L->first = L->last = new;
 		return;
 	}
-	
+	// If the item should be the first new item in the list. 
 	if (L->curr == L->first)
 	{
 		
@@ -262,13 +262,14 @@ void DLListAfter (DLList L, char *it)
 	assert (L != NULL);
 	DLListNode *new = newDLListNode(it);
 	L->nitems++;
+	// Checking if it is a null list 
 	if (L->curr == NULL)
 	{
 		L->curr = new;
 		L->first = L->last = new;
 		return;
 	}
-	
+	// adding after the last node 
 	if (L->curr == L->last)
 	{
 		new->prev = L->curr;
@@ -292,14 +293,23 @@ void DLListAfter (DLList L, char *it)
 void DLListDelete (DLList L)
 {
 	assert (L != NULL);
+	// Null case
+	if (L->curr == NULL) 
+	{ 	
+		return;
+	}
 
+	// if there is only one item in the list 
 	if (L->nitems == 1)
 	{
-		free(L->curr);
+		DLListNode *temp = L->curr;
+		free (temp->value);
+		free(temp);
 		L->curr = L->first = L->last = NULL;
 		L->nitems--;
 		return;
 	}
+	// call to the last node 
 	if (L->curr == L->last)
 	{
 		DLListNode *temp = L->curr;
@@ -307,16 +317,32 @@ void DLListDelete (DLList L)
 		L->last->next = NULL;
 		temp->prev = NULL;
 		L->curr = L->last;
+		free (temp->value);
 		free(temp);
 		L->nitems--;
 		return;
 	}
-	
+	// deleting the first node 
+	if (L->curr == L->first)
+	{
+		DLListNode *temp = L->curr;
+		L->first = temp->next;
+		L->first->prev = NULL;
+		L->last->next = NULL;
+		temp->next = NULL;
+		L->curr = L->first;
+		free (temp->value);
+		free(temp);
+		L->nitems--;
+		return;
+	}
+	// Deleting a node in between the list 
 	DLListNode *temp = L->curr;
 	temp->prev->next = temp->next;
 	temp->next->prev = temp->prev;
 	L->curr = temp->next;
 	temp->next = temp->prev = NULL;
+	free (temp->value);
 	free(temp);
 	L->nitems--;
 
