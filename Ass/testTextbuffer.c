@@ -32,18 +32,29 @@ static void testNewTB(void) {
 	       "-----------------------------------------\n");
 
 	// Calling dumpTB immediately after newTB, without modifying the TB
+	printf("TEST 1: The Given String \n\n");
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
+
 	assert(linesTB(tb1) == 4);
 
-	char *text1 = dumpTB(tb1, false); // Don't show line numbers
-	assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
-	free(text1);
+	printf("TEST 2: Checking for an empty line \n\n");
+	TB tb2 = newTB("A\n");
+	// printf("Number of line is %d", linesTB(tb2));
+	assert(linesTB(tb2) == 1);
 
-	releaseTB(tb1);
+	printf("TEST 3: Checking for NULL line \n\n");
+	TB tb3 = newTB(NULL);
+	assert(linesTB(tb3) == 0);
+
+	char *text1 = dumpTB(tb1, false); // Don't show line numbers
+	printf("this text: %s",text1);
+	assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
+	// free(text1);
+
+	// releaseTB(tb1);
 	
 	
 	printf("newTB tests passed!\n");
 }
 
 // TODO: Add more test functions
-
