@@ -84,6 +84,7 @@ TB newTB(char *text) {
 		buffer->nitems++;
 		// printf("%d : %s\n", buffer->nitems, buffer->last->value);
 	}
+	free(textTemp);
 	return buffer;
 }
 // {
