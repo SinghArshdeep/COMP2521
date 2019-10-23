@@ -49,7 +49,7 @@ TB newTB(char *text) {
 	if (text == NULL) {
 		return buffer;
 	}
-	char *textTemp = malloc(strlen(text)*sizeof(char));
+	char *textTemp = malloc(strlen(text)*sizeof(char) + 1);
 	if (textTemp == NULL){
 			fprintf(stderr, "Error in allocating memory for buffer");
 			abort();
@@ -65,7 +65,7 @@ TB newTB(char *text) {
 			fprintf(stderr, "Error in allocating memory for buffer");
 			abort();
 		}
-		new->value = malloc(strlen(string)*sizeof(char));
+		new->value = malloc(strlen(string)*sizeof(char) + 1);
 		new->next = new->prev = NULL;
 		if (new->value == NULL) {
 			fprintf(stderr, "Error in allocating memory for buffer");
