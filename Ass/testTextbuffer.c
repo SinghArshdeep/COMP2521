@@ -63,6 +63,7 @@ static void testNewTB(void) {
 
 	printf("TEST 4: Testing dumpTB without numbers \n\n");
 	char *text1 = dumpTB(tb1, false); // Don't show line numbers
+	printf("%s", text1);
 	assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
 
 	printf("TEST 5: Testing dumbTB with numbers \n\n");
