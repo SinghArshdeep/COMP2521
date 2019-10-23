@@ -155,7 +155,7 @@ static int checkSize(TB tb) {
 
 // Returns a string with line numbers
 static char *showLineNumber(TB tb) {
-	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 3*tb->nitems);
+	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 2*tb->nitems);
 	if (numString == NULL) {
 		fprintf(stderr, "Error in allocating memory for buffer");
 		abort();
