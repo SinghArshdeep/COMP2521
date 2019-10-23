@@ -209,7 +209,7 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
 	
 	while (count <= to) {
 		count++;
-		char *string = calloc(1, (strlen(temp->value) + strlen(prefix))*sizeof(char));
+		char *string = calloc(1, (tb->nitems + strlen(temp->value) + strlen(prefix))*sizeof(char));
 		strcpy(string, prefix);
 		strcat(string, temp->value);
 		free(temp->value);
