@@ -63,20 +63,20 @@ static void testNewTB(void) {
 
 	printf("TEST 4: Testing dumpTB without numbers \n\n");
 	char *text1 = dumpTB(tb1, false); // Don't show line numbers
-	printf("%s", text1);
+	// printf("%s", text1);
 	assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
 
 	printf("TEST 5: Testing dumbTB with numbers \n\n");
 	char *text2 = dumpTB(tb1, true); // Show line numbers
-	printf("%s", text2);
+	// printf("%s", text2);
 	assert(strcmp("1. hello there,\n2. how\n3. are\n4. things\n", text2) == 0);
 
 	free(text1);
 	free(text2);
 
-	// printf("TEST 5: VISUAL text after adding prefix  \n\n");
-	// addPrefixTB(tb1, 1, 4, "New ");
-	// show(tb1);
+	printf("TEST 5: VISUAL text after adding prefix  \n\n");
+	addPrefixTB(tb1, 1, 4, "New ");
+	show(tb1);
 
 	releaseTB(tb1);
 	// releaseTB(tb3);

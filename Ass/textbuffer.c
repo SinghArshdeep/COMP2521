@@ -155,7 +155,7 @@ static int checkSize(TB tb) {
 
 // Returns a string with line numbers
 static char *showLineNumber(TB tb) {
-	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 2*tb->nitems);
+	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 3*tb->nitems);
 	if (numString == NULL) {
 		fprintf(stderr, "Error in allocating memory for buffer");
 		abort();
@@ -193,29 +193,29 @@ int linesTB(TB tb) {
  *   is out of range. The first line of a textbuffer is at position 1.
  */
 void addPrefixTB(TB tb, int from, int to, char *prefix) {
-	// if (from < 1 || to > linesTB(tb)) {
-	// 	fprintf(stderr, "Lines out of range");
-	// 	abort();
-	// }else if (from > to) {
-	// 	fprintf(stderr, "Incorrect line range");
-	// 	abort();
-	// }
-	// int count = 1;
-	// Node temp = tb->first;
-	// while (count < from ) {
-	// 	count++;
-	// 	temp = temp->next;
-	// }
+	if (from < 1 || to > linesTB(tb)) {
+		fprintf(stderr, "Lines out of range");
+		abort();
+	}else if (from > to) {
+		fprintf(stderr, "Incorrect line range");
+		abort();
+	}
+	int count = 1;
+	Node temp = tb->first;
+	while (count < from ) {
+		count++;
+		temp = temp->next;
+	}
 	
-	// while (count <= to) {
-	// 	count++;
-	// 	char *string = malloc((strlen(temp->value) + strlen(prefix))*sizeof(char));
-	// 	strcpy(string, prefix);
-	// 	strcat(string, temp->value);
-	// 	free(temp->value);
-	// 	temp->value = string;
-	// 	temp = temp->next;
-	// }
+	while (count <= to) {
+		count++;
+		char *string = calloc(1, (strlen(temp->value) + strlen(prefix))*sizeof(char));
+		strcpy(string, prefix);
+		strcat(string, temp->value);
+		free(temp->value);
+		temp->value = string;
+		temp = temp->next;
+	}
 }
 
 /**
