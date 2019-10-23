@@ -21,8 +21,8 @@ struct textbuffer {
 
 // Static function prototypes
 static void freeNode(Node curr);
-static char *showLineNumber(TB tb);
-static int checkSize(TB tb);
+// static char *showLineNumber(TB tb);
+// static int checkSize(TB tb);
 
 
 /*
@@ -204,65 +204,66 @@ static void freeNode(Node curr) {
  * the line number.
  */
 char *dumpTB(TB tb, bool showLineNumbers) {
-	if (tb->first == NULL) {
-		return NULL;
-	}
-	if (showLineNumbers == true) {
-		return showLineNumber(tb);
-	}
-	char *string = malloc((tb->size)*sizeof(char));
-	strcpy(string, tb->first->value);
-	strcat(string, "\n");
-	Node temp = tb->first->next;
+	// if (tb->first == NULL) {
+	// 	return NULL;
+	// }
+	// if (showLineNumbers == true) {
+	// 	return showLineNumber(tb);
+	// }
+	// char *string = malloc((tb->size)*sizeof(char));
+	// strcpy(string, tb->first->value);
+	// strcat(string, "\n");
+	// Node temp = tb->first->next;
 
-	while (temp != NULL) {
-		strcat(string, temp->value);
-		strcat(string, "\n");
-		temp = temp->next;
-	}
+	// while (temp != NULL) {
+	// 	strcat(string, temp->value);
+	// 	strcat(string, "\n");
+	// 	temp = temp->next;
+	// }
 
-	return string;
+	// return string;
+	return NULL;
 }
 
 // Returns the size for the string
-static int checkSize(TB tb) {
-	int count = 0;
-	int n = tb->nitems;
-	while(n != 0) {
-        n /= 10;
-        ++count;
-    }
-	n = count + 2;
-	count = (tb->size + n);
-	return count;
-}
+// static int checkSize(TB tb) {
+// 	int count = 0;
+// 	int n = tb->nitems;
+// 	while(n != 0) {
+//         n /= 10;
+//         ++count;
+//     }
+// 	n = count + 2;
+// 	count = (tb->size + n);
+// 	return count;
+// }
 
 // Returns a string with line numbers
-static char *showLineNumber(TB tb) {
-	char *numString = malloc(checkSize(tb)*sizeof(char));
-	int count = 1;
-	char *num = NULL;
-	char text[3];
-	sprintf(text, "%d", count);
-	num = text;
-	strcpy(numString, num);
-	strcat(numString, ". ");
-	strcat(numString, tb->first->value);
-	strcat(numString, "\n");
-	Node temp = tb->first->next;
+// static char *showLineNumber(TB tb) {
+// 	char *numString = malloc(checkSize(tb)*sizeof(char));
+// 	int count = 1;
+// 	char *num = NULL;
+// 	char text[3];
+// 	sprintf(text, "%d", count);
+// 	num = text;
+// 	strcpy(numString, num);
+// 	strcat(numString, ". ");
+// 	strcat(numString, tb->first->value);
+// 	strcat(numString, "\n");
+// 	Node temp = tb->first->next;
 
-	while (temp != NULL) {
-		count++;
-		sprintf(text, "%d", count);
-		num = text;
-		strcat(numString, num);
-		strcat(numString, ". ");
-		strcat(numString, temp->value);
-		strcat(numString, "\n");
-		temp = temp->next;
-	}
-	return numString;
-}
+// 	while (temp != NULL) {
+// 		count++;
+// 		sprintf(text, "%d", count);
+// 		num = text;
+// 		strcat(numString, num);
+// 		strcat(numString, ". ");
+// 		strcat(numString, temp->value);
+// 		strcat(numString, "\n");
+// 		temp = temp->next;
+// 	}
+// 	return numString;
+// }
 
 /**
  * Return the number of lines of the given textbuffer.
@@ -277,29 +278,29 @@ int linesTB(TB tb) {
  *   is out of range. The first line of a textbuffer is at position 1.
  */
 void addPrefixTB(TB tb, int from, int to, char *prefix) {
-	if (from < 1 || to > linesTB(tb)) {
-		fprintf(stderr, "Lines out of range");
-		abort();
-	}else if (from > to) {
-		fprintf(stderr, "Incorrect line range");
-		abort();
-	}
-	int count = 1;
-	Node temp = tb->first;
-	while (count < from ) {
-		count++;
-		temp = temp->next;
-	}
+	// if (from < 1 || to > linesTB(tb)) {
+	// 	fprintf(stderr, "Lines out of range");
+	// 	abort();
+	// }else if (from > to) {
+	// 	fprintf(stderr, "Incorrect line range");
+	// 	abort();
+	// }
+	// int count = 1;
+	// Node temp = tb->first;
+	// while (count < from ) {
+	// 	count++;
+	// 	temp = temp->next;
+	// }
 	
-	while (count <= to) {
-		count++;
-		char *string = malloc((strlen(temp->value) + strlen(prefix))*sizeof(char));
-		strcpy(string, prefix);
-		strcat(string, temp->value);
-		free(temp->value);
-		temp->value = string;
-		temp = temp->next;
-	}
+	// while (count <= to) {
+	// 	count++;
+	// 	char *string = malloc((strlen(temp->value) + strlen(prefix))*sizeof(char));
+	// 	strcpy(string, prefix);
+	// 	strcat(string, temp->value);
+	// 	free(temp->value);
+	// 	temp->value = string;
+	// 	temp = temp->next;
+	// }
 }
 
 /**
@@ -313,34 +314,34 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
  *   range.
  */
 void mergeTB(TB tb1, int pos, TB tb2) {
-	if (pos > linesTB(tb1)) {
-		fprintf(stderr, "Line out of range");
-		abort();
-	}
-	int count = 1;
-	Node temp = tb1->first;
-	while (count < (pos - 1) ) 
-	{
-		count++;
-		temp = temp->next;
-	}
+	// if (pos > linesTB(tb1)) {
+	// 	fprintf(stderr, "Line out of range");
+	// 	abort();
+	// }
+	// int count = 1;
+	// Node temp = tb1->first;
+	// while (count < (pos - 1) ) 
+	// {
+	// 	count++;
+	// 	temp = temp->next;
+	// }
 
-	if (temp == tb1->first && pos == 1) 
-	{
-		tb1->first = tb2->first;
-		tb2->last->next = temp;
-		temp->prev = tb2->last;
-	} else
-	{
-		Node new = temp->next;
-		temp->next = tb2->first;
-		tb2->first->prev = temp;
-		tb2->last->next = new;
-		new->prev = tb2->last;
-	}
+	// if (temp == tb1->first && pos == 1) 
+	// {
+	// 	tb1->first = tb2->first;
+	// 	tb2->last->next = temp;
+	// 	temp->prev = tb2->last;
+	// } else
+	// {
+	// 	Node new = temp->next;
+	// 	temp->next = tb2->first;
+	// 	tb2->first->prev = temp;
+	// 	tb2->last->next = new;
+	// 	new->prev = tb2->last;
+	// }
 
-	tb1->nitems += tb2->nitems;
-	free(tb2);
+	// tb1->nitems += tb2->nitems;
+	// free(tb2);
 	
 }
 

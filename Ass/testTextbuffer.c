@@ -14,7 +14,7 @@
 
 static void testNewTB(void);
 static void show(TB tb);
-static void testmergeTB(void);
+// static void testmergeTB(void);
 
 // TODO: Add more function prototypes
 
@@ -35,7 +35,7 @@ struct textbuffer {
 int main(void) {
 	
 	testNewTB();
-	testmergeTB();
+	// testmergeTB();
 	// TODO: Call more test functions
 	
 	printf("All tests passed! You are awesome!\n");
@@ -57,27 +57,27 @@ static void testNewTB(void) {
 	// // printf("Number of line is %d", linesTB(tb2));
 	// assert(linesTB(tb2) == 1);
 
-	printf("TEST 3: Checking for NULL line \n\n");
-	TB tb3 = newTB(NULL);
-	assert(linesTB(tb3) == 0);
+	// printf("TEST 3: Checking for NULL line \n\n");
+	// TB tb3 = newTB(NULL);
+	// assert(linesTB(tb3) == 0);
 
-	printf("TEST 4: Testing dumpTB without numbers \n\n");
-	char *text1 = dumpTB(tb1, false); // Don't show line numbers
-	assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
-	free(text1);
+	// printf("TEST 4: Testing dumpTB without numbers \n\n");
+	// char *text1 = dumpTB(tb1, false); // Don't show line numbers
+	// assert(strcmp("hello there,\nhow\nare\nthings\n", text1) == 0);
+	// free(text1);
 
-	printf("TEST 5: Testing dumbTB with numbers \n\n");
-	char *text2 = dumpTB(tb1, true); // Show line numbers
-	printf("%s", text1);
-	assert(strcmp("1. hello there,\n2. how\n3. are\n4. things\n", text1) == 0);
-	free(text2);
+	// printf("TEST 5: Testing dumbTB with numbers \n\n");
+	// char *text2 = dumpTB(tb1, true); // Show line numbers
+	// printf("%s", text1);
+	// assert(strcmp("1. hello there,\n2. how\n3. are\n4. things\n", text1) == 0);
+	// free(text2);
 
-	printf("TEST 5: VISUAL text after adding prefix  \n\n");
-	addPrefixTB(tb1, 1, 4, "New ");
-	show(tb1);
+	// printf("TEST 5: VISUAL text after adding prefix  \n\n");
+	// addPrefixTB(tb1, 1, 4, "New ");
+	// show(tb1);
 
 	releaseTB(tb1);
-	releaseTB(tb3);
+	// releaseTB(tb3);
 	
 	printf("newTB tests passed!\n\n");
 }
@@ -93,17 +93,17 @@ static void show(TB tb){
 
 
 // TODO: Add more test functions
-static void testmergeTB(void) {
+// static void testmergeTB(void) {
 	
-	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
-	assert(linesTB(tb1) == 4);
+// 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
+// 	assert(linesTB(tb1) == 4);
 
-	TB tb3 = newTB("I'm\nvery good\n");
-	assert(linesTB(tb3) == 2);
+// 	TB tb3 = newTB("I'm\nvery good\n");
+// 	assert(linesTB(tb3) == 2);
 
-	mergeTB(tb1, 2, tb3);
+// 	mergeTB(tb1, 2, tb3);
 
-	show(tb1);
+// 	show(tb1);
 
-	releaseTB(tb1);
-}
+// 	releaseTB(tb1);
+// }
