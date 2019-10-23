@@ -50,9 +50,9 @@ TB newTB(char *text) {
 	}
 	char *textTemp = malloc(strlen(text)*sizeof(char) + 1);
 	if (textTemp == NULL){
-			fprintf(stderr, "Error in allocating memory for buffer");
-			abort();
-		}
+		fprintf(stderr, "Error in allocating memory for buffer");
+		abort();
+	}
 	strcpy(textTemp, text);
 
 	char *string = strtok(textTemp, "\n");
@@ -233,31 +233,36 @@ void mergeTB(TB tb1, int pos, TB tb2) {
 		fprintf(stderr, "Line out of range");
 		abort();
 	}
+	if(linesTB(tb1) == 0) {
+		tb1->first = tb2->first;
+		tb1->last = tb2->last;
+		tb1->size = tb2->size;
+		releaseTB(tb2);
+		return;
+	}
 	int count = 1;
 	Node temp = tb1->first;
-	while (count < (pos - 1) ) 
-	{
+	while (count < (pos - 1) ) {
 		count++;
 		temp = temp->next;
 	}
 
-	if (temp == tb1->first && pos == 1) 
-	{
+	if (temp == tb1->first && pos == 1) {
 		tb1->first = tb2->first;
 		tb2->last->next = temp;
 		temp->prev = tb2->last;
-	} else
-	{
+	}else {
 		Node new = temp->next;
 		temp->next = tb2->first;
 		tb2->first->prev = temp;
 		tb2->last->next = new;
 		new->prev = tb2->last;
 	}
-
 	tb1->nitems += tb2->nitems;
+	if (tb1->last == NULL) {
+		tb1->last = tb2->last;
+	}
 	free(tb2);
-	
 }
 
 /**
@@ -271,7 +276,53 @@ void mergeTB(TB tb1, int pos, TB tb2) {
  *   range.
  */
 void pasteTB(TB tb1, int pos, TB tb2) {
-
+	if (pos > linesTB(tb1)) {
+		fprintf(stderr, "Line out of range");
+		abort();
+	}
+	if (tb2->nitems == 0){
+		return;
+	}
+	int count = 1;
+	Node temp = tb1->first;
+	Node last = NULL;
+	while (count < (pos - 1)) {
+		count++;
+		temp = temp->next;
+	}
+	if (pos == 1) {
+		last = temp;
+	}else {
+		last = temp->next;
+	}
+	int found = 0;
+	Node first2 = tb2->first;
+	while (first2 != NULL) {	
+		if (temp == tb1->first && pos == 1 && found == 0) {
+			Node new = malloc(sizeof(struct TBNode));
+			new->value = calloc(1, (strlen(first2->value) + 1)*sizeof(char));
+			strcpy(new->value, first2->value);
+			new->prev = NULL;
+			tb1->first = new;
+			temp = new;
+			first2 = first2->next;
+			found++;
+		}else {
+			Node new = malloc(sizeof(struct TBNode));
+			new->value = calloc(1, (strlen(first2->value) + 1)*sizeof(char));
+			strcpy(new->value, first2->value);
+			new->prev = temp;
+			temp->next = new;
+			temp = new;
+			first2 = first2->next;
+		}
+	}
+	temp->next = last;
+	last->prev = temp;
+	tb1->nitems += tb2->nitems;
+	if (tb1->last == NULL) {
+		tb1->last = last;
+	}
 }
 
 /**

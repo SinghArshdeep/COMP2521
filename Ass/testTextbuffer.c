@@ -14,7 +14,8 @@
 
 static void testNewTB(void);
 static void show(TB tb);
-static void testmergeTB(void);
+static void testMergeTB(void);
+static void testPasteTB(void);
 
 // TODO: Add more function prototypes
 
@@ -35,7 +36,8 @@ struct textbuffer {
 int main(void) {
 	
 	testNewTB();
-	testmergeTB();
+	testMergeTB();
+	testPasteTB();
 	// TODO: Call more test functions
 	
 	printf("All tests passed! You are awesome!\n");
@@ -95,7 +97,7 @@ static void show(TB tb){
 
 
 // TODO: Add more test functions
-static void testmergeTB(void) {
+static void testMergeTB(void) {
 	
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
 	assert(linesTB(tb1) == 4);
@@ -104,8 +106,28 @@ static void testmergeTB(void) {
 	assert(linesTB(tb3) == 2);
 
 	mergeTB(tb1, 2, tb3);
-	printf("\nTEST: VISUAL text after adding prefix  \n\n");
+	
+	assert(linesTB(tb1) == 6);
+	printf("\nTEST: VISUAL text after Merging \n\n");
 	show(tb1);
 
 	releaseTB(tb1);
+}
+
+static void testPasteTB(void) {
+	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
+	assert(linesTB(tb1) == 4);
+
+	TB tb3 = newTB("I'm\nvery good\n");
+	assert(linesTB(tb3) == 2);
+
+	printf("\nTEST: VISUAL text after Pasting  \n\n");
+	pasteTB(tb1, 1, tb3);
+	show(tb1);
+
+	assert(linesTB(tb1) == 6);
+	printf("\nChecking if we can still access the pasted buffer  \n\n");
+	show(tb3);
+	releaseTB(tb1);
+	releaseTB(tb3);
 }
