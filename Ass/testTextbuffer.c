@@ -14,7 +14,7 @@
 
 static void testNewTB(void);
 static void show(TB tb);
-// static void testmergeTB(void);
+static void testmergeTB(void);
 
 // TODO: Add more function prototypes
 
@@ -35,7 +35,7 @@ struct textbuffer {
 int main(void) {
 	
 	testNewTB();
-	// testmergeTB();
+	testmergeTB();
 	// TODO: Call more test functions
 	
 	printf("All tests passed! You are awesome!\n");
@@ -95,17 +95,17 @@ static void show(TB tb){
 
 
 // TODO: Add more test functions
-// static void testmergeTB(void) {
+static void testmergeTB(void) {
 	
-// 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
-// 	assert(linesTB(tb1) == 4);
+	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
+	assert(linesTB(tb1) == 4);
 
-// 	TB tb3 = newTB("I'm\nvery good\n");
-// 	assert(linesTB(tb3) == 2);
+	TB tb3 = newTB("I'm\nvery good\n");
+	assert(linesTB(tb3) == 2);
 
-// 	mergeTB(tb1, 2, tb3);
+	mergeTB(tb1, 2, tb3);
+	printf("\nTEST: VISUAL text after adding prefix  \n\n");
+	show(tb1);
 
-// 	show(tb1);
-
-// 	releaseTB(tb1);
-// }
+	releaseTB(tb1);
+}

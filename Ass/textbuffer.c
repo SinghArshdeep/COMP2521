@@ -229,34 +229,34 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
  *   range.
  */
 void mergeTB(TB tb1, int pos, TB tb2) {
-	// if (pos > linesTB(tb1)) {
-	// 	fprintf(stderr, "Line out of range");
-	// 	abort();
-	// }
-	// int count = 1;
-	// Node temp = tb1->first;
-	// while (count < (pos - 1) ) 
-	// {
-	// 	count++;
-	// 	temp = temp->next;
-	// }
+	if (pos > linesTB(tb1)) {
+		fprintf(stderr, "Line out of range");
+		abort();
+	}
+	int count = 1;
+	Node temp = tb1->first;
+	while (count < (pos - 1) ) 
+	{
+		count++;
+		temp = temp->next;
+	}
 
-	// if (temp == tb1->first && pos == 1) 
-	// {
-	// 	tb1->first = tb2->first;
-	// 	tb2->last->next = temp;
-	// 	temp->prev = tb2->last;
-	// } else
-	// {
-	// 	Node new = temp->next;
-	// 	temp->next = tb2->first;
-	// 	tb2->first->prev = temp;
-	// 	tb2->last->next = new;
-	// 	new->prev = tb2->last;
-	// }
+	if (temp == tb1->first && pos == 1) 
+	{
+		tb1->first = tb2->first;
+		tb2->last->next = temp;
+		temp->prev = tb2->last;
+	} else
+	{
+		Node new = temp->next;
+		temp->next = tb2->first;
+		tb2->first->prev = temp;
+		tb2->last->next = new;
+		new->prev = tb2->last;
+	}
 
-	// tb1->nitems += tb2->nitems;
-	// free(tb2);
+	tb1->nitems += tb2->nitems;
+	free(tb2);
 	
 }
 
