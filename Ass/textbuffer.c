@@ -21,9 +21,8 @@ struct textbuffer {
 
 // Static function prototypes
 static void freeNode(Node curr);
-// static char *showLineNumber(TB tb);
-// static int checkSize(TB tb);
-
+static char *showLineNumber(TB tb);
+static int checkSize(TB tb);
 
 /*
  * Allocate a new textbuffer whose contents is initialised with the text
@@ -87,93 +86,7 @@ TB newTB(char *text) {
 	free(textTemp);
 	return buffer;
 }
-// {
-// 	TB buffer = malloc(sizeof(buffer));
-// 	if (buffer == NULL) fprintf(stderr, "couldn't allocate TB node");
-// 	buffer->nitems = 0;
-// 	buffer->size = 0;
 
-// 	// Check if the string is NUll and return empty buffer
-// 	if (text == NULL)
-// 	{
-// 		buffer->last = buffer->first = NULL;
-// 		return buffer;
-// 	}
-
-// 	char *string;
-// 	char newLine[1] = "\n";
-// 	if (strcmp(newLine, text) == 0)
-// 	{
-// 		Node new = malloc(sizeof(new));
-// 		new->value = strdup("");
-// 		new->prev = new->next = NULL;
-
-// 		// Link the node to the buffer
-// 		buffer->first = buffer->last = new;
-// 		buffer->nitems++;
-// 		buffer->size++;
-// 		return buffer;
-// 	}
-// 	char *textTemp = malloc(strlen(text) + 1);
-// 	strcpy(textTemp, text);
-// 	string = strtok(textTemp, newLine);
-// 	buffer->size = strlen(textTemp);
-// 	int count = 0;
-
-// 	while (string != NULL)
-// 	{
-// 		count++;
-// 		if (count == 1)
-// 		{
-// 			Node new = malloc(sizeof(Node));
-// 			new->value = malloc(sizeof(string));
-// 			new->value = strdup(string);
-// 			// strcpy(new->value, string);
-// 			new->prev = new->next = NULL;
-// 			printf("value is %s \n",string);
-// 			printf("Mallc is %s \n",new->value);
-
-// 			// Link the node to the buffer
-// 			buffer->first = buffer->last = new;
-// 		}
-// 		else
-// 		{
-// 			Node temp = malloc(sizeof(temp));
-// 			if (temp == NULL) fprintf(stderr, "couldn't allocate TB node");
-// 			temp->value = strdup (string);
-// 			temp->prev = buffer->last;
-// 			buffer->last->next = temp;
-// 			temp->next = NULL;
-// 			buffer->last = temp;
-// 			printf("value is %s \n",string);
-// 			printf("Mallc is %s \n",temp->value);
-// 		}
-// 		string = strtok(NULL, newLine);
-// 	}
-
-// 	buffer->nitems = count;
-// 	Node temp = buffer->first;
-// 	while (temp != NULL)
-// 	{
-// 		printf("%s \n", temp->value);
-// 		temp = temp->next;
-// 	}
-// 	return buffer;
-// }
-
-// A function to count new line characters in a given string
-// static int countNewLine(char *text){
-// 	size_t size = strlen(text);
-// 	int count = 0;
-// 	for (size_t i = 0; i < size; i++)
-// 	{
-// 		if (text[i] == '\n')
-// 		{
-// 			count++;
-// 		}
-// 	}
-// 	return count;
-// }
 /**
  * Free  the  memory occupied by the given textbuffer. It is an error to
  * access the buffer afterwards.
@@ -205,66 +118,69 @@ static void freeNode(Node curr) {
  * the line number.
  */
 char *dumpTB(TB tb, bool showLineNumbers) {
-	// if (tb->first == NULL) {
-	// 	return NULL;
-	// }
-	// if (showLineNumbers == true) {
-	// 	return showLineNumber(tb);
-	// }
-	// char *string = malloc((tb->size)*sizeof(char));
-	// strcpy(string, tb->first->value);
-	// strcat(string, "\n");
-	// Node temp = tb->first->next;
+	if (tb->first == NULL) {
+		return NULL;
+	}
+	if (showLineNumbers == true) {
+		return showLineNumber(tb);
+	}
+	char *string = malloc((tb->size)*sizeof(char) + 3);
+	if (string == NULL) {
+		fprintf(stderr, "Error in allocating memory for buffer");
+		abort();
+	}
+	strcpy(string, tb->first->value);
+	strcat(string, "\n");
+	Node temp = tb->first->next;
 
-	// while (temp != NULL) {
-	// 	strcat(string, temp->value);
-	// 	strcat(string, "\n");
-	// 	temp = temp->next;
-	// }
+	while (temp != NULL) {
+		strcat(string, temp->value);
+		strcat(string, "\n");
+		temp = temp->next;
+	}
 
-	// return string;
-	return NULL;
+	return string;
 }
 
 // Returns the size for the string
-// static int checkSize(TB tb) {
-// 	int count = 0;
-// 	int n = tb->nitems;
-// 	while(n != 0) {
-//         n /= 10;
-//         ++count;
-//     }
-// 	n = count + 2;
-// 	count = (tb->size + n);
-// 	return count;
-// }
+static int checkSize(TB tb) {
+	int count = 0;
+	int n = tb->nitems;
+	while(n != 0) {
+        n /= 10;
+        ++count;
+    }
+	n = count + 2;
+	count = (tb->size + n);
+	return count;
+}
 
 // Returns a string with line numbers
-// static char *showLineNumber(TB tb) {
-// 	char *numString = malloc(checkSize(tb)*sizeof(char));
-// 	int count = 1;
-// 	char *num = NULL;
-// 	char text[3];
-// 	sprintf(text, "%d", count);
-// 	num = text;
-// 	strcpy(numString, num);
-// 	strcat(numString, ". ");
-// 	strcat(numString, tb->first->value);
-// 	strcat(numString, "\n");
-// 	Node temp = tb->first->next;
+static char *showLineNumber(TB tb) {
+	char *numString = malloc(checkSize(tb)*sizeof(char));
+	if (numString == NULL) {
+		fprintf(stderr, "Error in allocating memory for buffer");
+		abort();
+	}
+	int count = 0;
+	char *num = NULL;
+	char text[3];
 
-// 	while (temp != NULL) {
-// 		count++;
-// 		sprintf(text, "%d", count);
-// 		num = text;
-// 		strcat(numString, num);
-// 		strcat(numString, ". ");
-// 		strcat(numString, temp->value);
-// 		strcat(numString, "\n");
-// 		temp = temp->next;
-// 	}
-// 	return numString;
-// }
+	Node temp = tb->first;
+
+	while (temp != NULL) {
+		count++;
+		sprintf(text, "%d", count);
+		num = text;
+		strcat(numString, num);
+		strcat(numString, ". ");
+		strcat(numString, temp->value);
+		strcat(numString, "\n");
+		temp = temp->next;
+	}
+
+	return numString;
+}
 
 /**
  * Return the number of lines of the given textbuffer.
