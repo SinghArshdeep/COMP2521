@@ -1,0 +1,47 @@
+Results for Tests on 5000 values
+
+Depth = depth of tree, Cost = average #comparisons per search
+
+
+             Ascending Order        Prefix Order        Random Order
+Insert
+Method       Depth      Cost     Depth      Cost     Depth      Cost
+
+L         ____5000  ____3123  ______13  ______12  ______26  ______14
+
+A         ____5000  ____1878  ____2954  ____1110  ______27  ______14
+
+R         ____2581  _____970  ____1801  _____674  ______32  ______15
+
+B         _____206  ______63  ______20  ______14  ______20  ______12
+
+S         ____5000  _______7  ____5000  _______7  ______28  _______6
+
+V         ______13  ______12  ______13  ______12  ______15  ______12
+
+
+Notes (what the above indicates):
+
+> Most evident: The greater the depth of the tree the higher the cost of searching.
+> Across the board random order insertion performed very well.
+
+# L = insert new values at the leaves (standard BST insert)
+    Prefix order creates the perfect tree with less depth 
+
+#A = insert new values at the root
+    Ascending order is similar to that for Standard Insertion, however we have a linked list in descending order.
+
+#R = insert values by randomly choosing between L and A
+    Does not perform well in any combination 
+
+#B = insert at leaves, but periodically rebalance the tree
+    Significantly improves depth for Ascending order
+    Search cost is increased for prefix order 
+
+#S = insert using the Splay Tree approach
+    The depth varies but the search cost is lower even though values are added to top of the tree
+    It is most efficient in search cost 
+
+#V = insert using the AVL Tree approach
+    This approachbest works to keep the depth of the tree as low as possible 
+    Creates a balanced tree
