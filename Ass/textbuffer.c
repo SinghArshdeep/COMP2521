@@ -23,7 +23,7 @@ struct textbuffer {
 static void freeNode(Node curr);
 static char *showLineNumber(TB tb);
 static int checkSize(TB tb);
-
+static void pasteLastTB(TB tb1, TB tb2);
 /*
  * Allocate a new textbuffer whose contents is initialised with the text
  * in the given string.
@@ -193,7 +193,7 @@ int linesTB(TB tb) {
  *   is out of range. The first line of a textbuffer is at position 1.
  */
 void addPrefixTB(TB tb, int from, int to, char *prefix) {
-	if (from < 1 || to > linesTB(tb)) {
+	if (from < 1 || to > tb->nitems) {
 		fprintf(stderr, "Lines out of range");
 		abort();
 	}else if (from > to) {
@@ -209,13 +209,14 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
 	
 	while (count <= to) {
 		count++;
-		char *string = calloc(1, (tb->nitems + strlen(temp->value) + strlen(prefix))*sizeof(char));
+		char *string = calloc(1, (2 + strlen(temp->value) + strlen(prefix)) * sizeof(char));
 		strcpy(string, prefix);
 		strcat(string, temp->value);
 		free(temp->value);
 		temp->value = string;
 		temp = temp->next;
 	}
+	tb->size = tb->size + ((2 + strlen(prefix)) * tb->nitems);
 }
 
 /**
@@ -229,28 +230,36 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
  *   range.
  */
 void mergeTB(TB tb1, int pos, TB tb2) {
-	if (pos > linesTB(tb1)) {
+	if (pos > tb1->nitems + 1) {
 		fprintf(stderr, "Line out of range");
 		abort();
 	}
-	if(linesTB(tb1) == 0) {
+	if (tb1->nitems == 0) {
 		tb1->first = tb2->first;
 		tb1->last = tb2->last;
 		tb1->size = tb2->size;
-		releaseTB(tb2);
+		free(tb2);
+		return;
+	}
+	if (tb2->nitems == 0) {
+		free(tb2);
 		return;
 	}
 	int count = 1;
 	Node temp = tb1->first;
-	while (count < (pos - 1) ) {
+	while (count < (pos - 1)) {
 		count++;
 		temp = temp->next;
-	}
+	} 
 
 	if (temp == tb1->first && pos == 1) {
 		tb1->first = tb2->first;
 		tb2->last->next = temp;
 		temp->prev = tb2->last;
+	}else if (temp == tb1->last) {
+		temp->next = tb2->first;
+		tb2->first->prev = temp;
+		tb1->last = tb2->last;
 	}else {
 		Node new = temp->next;
 		temp->next = tb2->first;
@@ -259,6 +268,7 @@ void mergeTB(TB tb1, int pos, TB tb2) {
 		new->prev = tb2->last;
 	}
 	tb1->nitems += tb2->nitems;
+	tb1->size += tb2->size;
 	if (tb1->last == NULL) {
 		tb1->last = tb2->last;
 	}
@@ -276,13 +286,19 @@ void mergeTB(TB tb1, int pos, TB tb2) {
  *   range.
  */
 void pasteTB(TB tb1, int pos, TB tb2) {
-	if (pos > linesTB(tb1)) {
+	if (pos > tb1->nitems + 1) {
 		fprintf(stderr, "Line out of range");
 		abort();
 	}
-	if (tb2->nitems == 0){
+	if (tb2->nitems == 0) {
 		return;
 	}
+	if (pos == tb1->nitems + 1)
+	{
+		pasteLastTB(tb1, tb2);
+		return;
+	}
+	
 	int count = 1;
 	Node temp = tb1->first;
 	Node last = NULL;
@@ -316,6 +332,7 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 			temp = new;
 			first2 = first2->next;
 		}
+		tb1->size += strlen(temp->value);
 	}
 	temp->next = last;
 	last->prev = temp;
@@ -325,6 +342,22 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	}
 }
 
+static void pasteLastTB(TB tb1, TB tb2) {
+	Node last = tb2->first;
+	for (int i = 0; i < tb2->nitems; i++)
+	{
+		Node new = malloc(sizeof(struct TBNode));
+		new->value = calloc(1, (strlen(last->value) + 1)*sizeof(char));
+		strcpy(new->value, last->value);
+		new->next = NULL;
+		tb1->last->next = new;
+		new->prev = tb1->last;
+		last = last->next;
+		tb1->last = new;
+		tb1->size += strlen(new->value);
+		tb1->nitems++;
+	}
+}
 /**
  * Cut  the lines between and including 'from' and 'to' out of the given
  * textbuffer 'tb' into a new textbuffer.
@@ -334,7 +367,57 @@ void pasteTB(TB tb1, int pos, TB tb2) {
  *   is out of range.
  */
 TB cutTB(TB tb, int from, int to) {
-	return NULL;
+	if (to < from)
+		return NULL;
+	if (from < 1 || to > tb->nitems) {
+		fprintf(stderr, "Lines out of range\n");
+		abort();
+	}
+	if (tb->nitems == 0) {
+		fprintf(stderr, "Can not delete lines in an empty buffer\n");
+		abort();
+	}
+	TB buffer = malloc(sizeof(struct textbuffer));
+	if (buffer == NULL) {
+		fprintf(stderr, "Error in allocating memory\n");
+		abort();
+	}
+	buffer->nitems = 0;
+	buffer->size = 0;
+	buffer->first = buffer->last = NULL;
+	int count = 1;
+	Node temp = tb->first;
+	while (count < from) {
+		count++;
+		temp = temp->next;
+	}
+	while(count <= to ) {
+		Node new = malloc(sizeof(struct TBNode));
+		if (new == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+		}
+		new->value = calloc(1, strlen(temp->value)*sizeof(char) + 1);
+		new->next = new->prev = NULL;
+		if (new->value == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+		}
+		strcpy(new->value, temp->value);
+		if (buffer->last == NULL) {
+			buffer->first = buffer->last = new;
+		}else {
+			buffer->last->next = new;
+			new->prev = buffer->last;
+			buffer->last = new;
+		}
+		temp = temp->next;
+		buffer->nitems++;
+		buffer->size += strlen(new->value);
+		count++;
+	}
+	deleteTB(tb, from, to);
+	return buffer;
 }
 
 /**
@@ -344,7 +427,16 @@ TB cutTB(TB tb, int from, int to) {
  * - The user is responsible for freeing the returned list.
  */
 Match searchTB(TB tb, char *search) {
-	return NULL;
+	if (search == NULL)
+		abort();
+	Node first = tb->first;
+	for (int i = 0; i < tb->nitems; i++)
+	{
+		int searchLen = strlen(search);
+		first = first->next;
+	}
+	
+	
 }
 
 /**
@@ -354,7 +446,53 @@ Match searchTB(TB tb, char *search) {
  *   is out of range.
  */
 void deleteTB(TB tb, int from, int to) {
-
+	if (to < from) {
+		fprintf(stderr, "Invalid arguments please check");
+		abort();
+	}
+	if (from < 1 || to > tb->nitems) {
+		fprintf(stderr, "Lines out of range\n");
+		abort();
+	}
+	if (tb->nitems == 0) {
+		fprintf(stderr, "Can not delete lines in an empty buffer\n");
+		abort();
+	}
+	int count = 1;
+	Node temp = tb->first;
+	while (count < from) {
+		count++;
+		temp = temp->next;
+	}
+	while (count <= to) {
+		if (temp == tb->first)
+		{
+			Node delete = temp;
+			tb->first = temp->next;
+			temp = temp->next;
+			temp->prev = NULL;
+			freeNode(delete);
+		}
+		else if (temp == tb->last)
+		{
+			Node delete = temp;
+			tb->last = temp->prev;
+			temp = temp->prev;
+			temp->next = NULL;
+			freeNode(delete);
+		}
+		else
+		{
+			Node delete = temp;
+			temp->prev->next = temp->next;
+			temp->next->prev = temp->prev;
+			temp = temp->next;
+			freeNode(delete);
+		}
+		tb->nitems--;
+		count++;
+	}
+	
 }
 
 /**

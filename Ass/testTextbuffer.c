@@ -16,6 +16,7 @@ static void testNewTB(void);
 static void show(TB tb);
 static void testMergeTB(void);
 static void testPasteTB(void);
+static void testCutTB(void);
 
 // TODO: Add more function prototypes
 
@@ -35,12 +36,13 @@ struct textbuffer {
 
 int main(void) {
 	
-	testNewTB();
-	testMergeTB();
+	// testNewTB();
+	// testMergeTB();
 	testPasteTB();
+	// testCutTB();
 	// TODO: Call more test functions
 	
-	printf("All tests passed! You are awesome!\n");
+	printf("All tests passed! I'm AWESOME!\n");
 }
 
 static void testNewTB(void) {
@@ -76,7 +78,7 @@ static void testNewTB(void) {
 	free(text1);
 	free(text2);
 
-	printf("TEST 5: VISUAL text after adding prefix  \n\n");
+	printf("TEST 5: VISUAL test after adding prefix  \n\n");
 	addPrefixTB(tb1, 1, 4, "New ");
 	show(tb1);
 
@@ -105,10 +107,10 @@ static void testMergeTB(void) {
 	TB tb3 = newTB("I'm\nvery good\n");
 	assert(linesTB(tb3) == 2);
 
-	mergeTB(tb1, 2, tb3);
+	mergeTB(tb1, 5, tb3);
 	
 	assert(linesTB(tb1) == 6);
-	printf("\nTEST: VISUAL text after Merging \n\n");
+	printf("\nTEST: VISUAL test after Merging \n\n");
 	show(tb1);
 
 	releaseTB(tb1);
@@ -121,8 +123,8 @@ static void testPasteTB(void) {
 	TB tb3 = newTB("I'm\nvery good\n");
 	assert(linesTB(tb3) == 2);
 
-	printf("\nTEST: VISUAL text after Pasting  \n\n");
-	pasteTB(tb1, 1, tb3);
+	printf("\nTEST: VISUAL test after Pasting  \n\n");
+	pasteTB(tb1, 5, tb3);
 	show(tb1);
 
 	assert(linesTB(tb1) == 6);
@@ -130,4 +132,14 @@ static void testPasteTB(void) {
 	show(tb3);
 	releaseTB(tb1);
 	releaseTB(tb3);
+}
+
+static void testCutTB(void) {
+	printf("\nTESTING cutTB Function \n");
+	TB tb1 = newTB("hello there,\nhow\nare\nthings!\nTell\nme\n");
+	assert(linesTB(tb1) == 6);
+	show(tb1);
+	TB tb = cutTB(tb1, 3, 5);
+	printf("\nTEST: VISUAL test after cut  \n\n");
+	show(tb1);
 }
