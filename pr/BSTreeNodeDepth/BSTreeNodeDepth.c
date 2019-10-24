@@ -4,6 +4,24 @@
 #include "BSTree.h"
 
 int BSTreeNodeDepth(BSTree t, int key) {
-	return 0;
+	if (t == NULL)
+	{
+		return -1;
+	}else if (t->value == key)
+	{
+		return 0;
+	}
+	int left = BSTreeNodeDepth(t->left, key);
+	int right = BSTreeNodeDepth(t->right, key);
+	if (left != -1)
+	{
+		return 1 + left;
+	}else if (right != -1)
+	{
+		return 1 + right;
+	}else
+	{
+		return -1;
+	}
 }
 
