@@ -15,7 +15,7 @@ int TreeHeight(Tree t) {
         return 1 + left;
     }else
     {
-        return 1+ right;
+        return 1 + right;
     }
     
 }
