@@ -14,6 +14,8 @@ int TreeSumOdds(Tree t) {
 	{
 		return 0;
 	}
-	return TreeSumOdds(t->left) + TreeSumOdds(t->right);
+	int left = TreeSumOdds(t->left); 
+	int right = TreeSumOdds(t->right);
+	return left + right;
 }
 
