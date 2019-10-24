@@ -10,7 +10,7 @@ int TreeSumOdds(Tree t) {
 	}
 	int left = TreeSumOdds(t->left); 
 	int right = TreeSumOdds(t->right);
-	if (t->value % 2 == 1)
+	if (t->value % 2 != 0)
 	{
 		return t->value + left + right;
 	}
