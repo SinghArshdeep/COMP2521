@@ -10,10 +10,7 @@ BSTree BSTreeGetSmallest(BSTree t) {
 	}else if (t->left == NULL)
 	{
 		return t;
-	}else
-	{
-		return BSTreeGetSmallest(t->left);
 	}
-	
+		return BSTreeGetSmallest(t->left);
 }
 
