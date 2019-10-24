@@ -8,12 +8,11 @@ int TreeSumOdds(Tree t) {
 	{
 		return 0;
 	}
-	int left = TreeSumOdds(t->left); 
-	int right = TreeSumOdds(t->right);
+	int left = TreeSumOdds(t->left) + TreeSumOdds(t->right);
 	if (t->value % 2 != 0)
 	{
-		return t->value + left + right;
+		left += t->value;
 	}
-	return 0;
+	return left;
 }
 
