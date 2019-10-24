@@ -19,9 +19,9 @@ int BSTreeNodeDepth(BSTree t, int key) {
 	}else if (right != -1)
 	{
 		return 1 + right;
-	}else
-	{
-		return -1;
 	}
+	
+	return -1;
+
 }
 
