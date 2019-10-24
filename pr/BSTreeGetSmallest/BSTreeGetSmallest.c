@@ -12,10 +12,8 @@ BSTree BSTreeGetSmallest(BSTree t) {
 		return t;
 	}else
 	{
-		return BSTreeGetSmallest(t);
+		return BSTreeGetSmallest(t->left);
 	}
-	
-	
 	
 }
 
