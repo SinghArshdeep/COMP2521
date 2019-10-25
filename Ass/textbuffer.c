@@ -311,6 +311,7 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	char *text = dumpTB(tb2, false);
 	TB tb3 = newTB(text);
 	mergeTB(tb1, pos, tb3);
+	free(text);
 }
 /**
  * Cut  the lines between and including 'from' and 'to' out of the given
