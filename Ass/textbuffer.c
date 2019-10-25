@@ -437,7 +437,7 @@ Match searchTB(TB tb, char *search) {
 	for (int i = 0; i < tb->nitems; i++) {
 		char *string = first->value;
 		while ((string = strstr(string , search))) {
-			Match list = malloc(sizeof(Match));
+			Match list = malloc(sizeof(matchNode));
 			list->lineNumber = i + 1;
 			list->columnNumber = (int)(string - first->value) + 1;
 			list->next = NULL;
