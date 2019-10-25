@@ -40,7 +40,7 @@ int main(void) {
 	
 	testNewTB();
 	testMergeTB();
-	// testPasteTB();
+	testPasteTB();
 	// testCutTB();
 	// testSearchTB();
 	testRichPapa();
@@ -130,6 +130,9 @@ static void testMergeTB(void) {
 static void testPasteTB(void) {
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
 	assert(linesTB(tb1) == 4);
+	printf("\nTEST: VISUAL test after Same BUFFER  \n\n");
+	pasteTB(tb1, 2, tb1);
+	show(tb1);
 
 	TB tb3 = newTB("I'm\nvery good\n");
 	assert(linesTB(tb3) == 2);
