@@ -24,6 +24,8 @@ static void freeNode(Node curr);
 static char *showLineNumber(TB tb);
 static int checkSize(TB tb);
 static void pasteLastTB(TB tb1, TB tb2);
+static void checkHash(char *string, TB tb, Node curr);
+static void checkBold(char *string, TB tb, Node curr);
 /*
  * Allocate a new textbuffer whose contents is initialised with the text
  * in the given string.
@@ -433,7 +435,6 @@ Match searchTB(TB tb, char *search) {
 	Match newList, prev;
 	newList = NULL;
 	int searchLen = strlen(search);
-	int found = 0;
 	for (int i = 0; i < tb->nitems; i++) {
 		char *string = first->value;
 		while ((string = strstr(string , search))) {
@@ -519,7 +520,42 @@ void deleteTB(TB tb, int from, int to) {
  * - Refer to the spec for details.
  */
 void formRichText(TB tb) {
+	Node curr = tb->first;
+	while (curr != NULL)
+	{
+		checkHash(curr->value, tb, curr);
+		checkBold(curr->value, tb, curr);
+		curr = curr->next;
+	}
+	
+}
 
+static void checkHash(char *string, TB tb, Node curr) {
+	if (strncmp(string, "#", 1) == 0)
+	{
+		Node new = curr;
+		new->value = calloc(1, (strlen(string) + 10)*sizeof(char));
+		tb->size += 10;
+		strcpy(new->value, "<h1>");
+		string++;
+		strcat(new->value, string);
+		strcat(new->value, "</h1>");
+		free(curr->value);
+		curr->value = new->value;
+	}
+	return;
+}
+
+
+static void checkBold(char *string, TB tb, Node curr) {
+	char *new = strchr(string, '*');
+	char *prev, *next;
+	while (new != NULL && strlen(string) > 2)
+	{
+		prev = new;
+		
+	}
+	
 }
 
 ////////////////////////////////////////////////////////////////////////
