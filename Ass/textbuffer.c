@@ -23,9 +23,8 @@ struct textbuffer {
 static void freeNode(Node curr);
 static char *showLineNumber(TB tb);
 static int checkSize(TB tb);
-static void pasteLastTB(TB tb1, TB tb2);
 static void checkHash(char *string, TB tb, Node curr);
-static void checkBold(char *string, TB tb, Node curr);
+// static void checkBold(char *string, TB tb, Node curr);
 /*
  * Allocate a new textbuffer whose contents is initialised with the text
  * in the given string.
@@ -509,13 +508,13 @@ static void checkHash(char *string, TB tb, Node curr) {
 	{
 		Node new = curr;
 		// Allocate new memory for the line
-		new->value = calloc(1, (strlen(string) + 10)*sizeof(char));
+		new->value = calloc(1, (strlen(string) + 11)*sizeof(char));
 		if (new->value == NULL) {
 			fprintf(stderr, "Error in allocating memory for buffer");
 			abort();
 		}
 		// Catenate strings to the new string 
-		tb->size += 10;
+		tb->size += 11;
 		strcpy(new->value, "<h1>");
 		string++;
 		strcat(new->value, string);
@@ -528,7 +527,7 @@ static void checkHash(char *string, TB tb, Node curr) {
 }
 
 
-static void checkBold(char *string, TB tb, Node curr) {
+// static void checkBold(char *string, TB tb, Node curr) {
 	
 	// char *text = malloc(strlen(string)*sizeof(char) + 1);
 	// strcpy(text, string);
@@ -566,7 +565,7 @@ static void checkBold(char *string, TB tb, Node curr) {
 		
 	// }
 	
-}
+// }
 
 ////////////////////////////////////////////////////////////////////////
 // Bonus challenges

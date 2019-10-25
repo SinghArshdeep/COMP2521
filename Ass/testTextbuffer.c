@@ -123,6 +123,7 @@ static void testMergeTB(void) {
 
 	char *text = dumpTB(tb1, true);
 	printf("%s\n", text);
+	free(text);
 	releaseTB(tb1);
 	// releaseTB(tb3);
 }
