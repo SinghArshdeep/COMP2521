@@ -145,7 +145,7 @@ static void testPasteTB(void) {
 	printf("\nTEST: VISUAL test after Same BUFFER  \n\n");
 	pasteTB(tb1, 2, tb1);
 	show(tb1);
-	
+
 	releaseTB(tb1);
 	releaseTB(tb3);
 }
@@ -190,5 +190,7 @@ static void testRichPapa(void) {
 	show(tb1);
 	formRichText(tb1);
 	show(tb1);
+
+	releaseTB(tb1);
 	return;
 }
