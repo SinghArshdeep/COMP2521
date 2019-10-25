@@ -37,11 +37,11 @@ struct textbuffer {
 
 int main(void) {
 	
-	// testNewTB();
+	testNewTB();
 	// testMergeTB();
 	// testPasteTB();
-	//testCutTB();
-	testSearchTB();
+	// testCutTB();
+	// testSearchTB();
 	// TODO: Call more test functions
 	
 	printf("All tests passed! I'm AWESOME!\n");
@@ -54,18 +54,19 @@ static void testNewTB(void) {
 
 	// Calling dumpTB immediately after newTB, without modifying the TB
 	printf("TEST 1: The Given String \n\n");
+	
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
-
+	// show(tb1);
 	assert(linesTB(tb1) == 4);
 
-	// printf("TEST 2: Checking for an empty line \n\n");
-	// TB tb2 = newTB("\n");
-	// // printf("Number of line is %d", linesTB(tb2));
-	// assert(linesTB(tb2) == 1);
+	printf("TEST 2: Checking for an empty line \n\n");
+	TB tb2 = newTB("\n");
+	// printf("Number of line is %d", linesTB(tb2));
+	assert(linesTB(tb2) == 1);
 
-	// printf("TEST 3: Checking for NULL line \n\n");
-	// TB tb3 = newTB(NULL);
-	// assert(linesTB(tb3) == 0);
+	printf("TEST 3: Checking for NULL line \n\n");
+	TB tb3 = newTB(NULL);
+	assert(linesTB(tb3) == 0);
 
 	printf("TEST 4: Testing dumpTB without numbers \n\n");
 	char *text1 = dumpTB(tb1, false); // Don't show line numbers
@@ -104,6 +105,7 @@ static void show(TB tb){
 static void testMergeTB(void) {
 	
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
+	
 	assert(linesTB(tb1) == 4);
 
 	TB tb3 = newTB("I'm\nvery good\n");
@@ -114,6 +116,10 @@ static void testMergeTB(void) {
 	assert(linesTB(tb1) == 6);
 	printf("\nTEST: VISUAL test after Merging \n\n");
 	show(tb1);
+	printf("\nTEST: Calling dumstring  \n\n");
+	char *text = dumpTB(tb1, true);
+	printf("%s\n", text);
+	free(text);
 
 	releaseTB(tb1);
 }

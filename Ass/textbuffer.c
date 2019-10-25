@@ -37,8 +37,7 @@ TB newTB(char *text) {
 	}
 	if (text != NULL) {
 		buffer->size = strlen(text);
-	}else
-	{
+	}else {
 		buffer->size = 0;
 	}
 
@@ -55,22 +54,22 @@ TB newTB(char *text) {
 	}
 	strcpy(textTemp, text);
 
-	char *string = strtok(textTemp, "\n");
-
+	char *string = strchr(textTemp , '\n');
+	char *data = textTemp;
 	while (string != NULL) {
-		// printf("%s \n", string);
+		string[0] = '\0';
 		Node new = malloc(sizeof(struct TBNode)*sizeof(char));
 		if (new == NULL) {
 			fprintf(stderr, "Error in allocating memory for buffer");
 			abort();
 		}
-		new->value = malloc(strlen(string)*sizeof(char) + 1);
+		new->value = malloc(strlen(data)*sizeof(char) + 1);
 		new->next = new->prev = NULL;
 		if (new->value == NULL) {
 			fprintf(stderr, "Error in allocating memory for buffer");
 			abort();
 		}
-		strcpy(new->value, string);
+		strcpy(new->value, data);
 		if (buffer->last == NULL) {
 			buffer->first = buffer->last = new;
 		}else
@@ -79,7 +78,8 @@ TB newTB(char *text) {
 			new->prev = buffer->last;
 			buffer->last = new;
 		}
-		string = strtok(NULL, "\n");
+		data = &string[1];
+		string = strchr(data , '\n');
 		buffer->nitems++;
 		// printf("%d : %s\n", buffer->nitems, buffer->last->value);
 	}
