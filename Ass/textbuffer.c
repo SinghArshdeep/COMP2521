@@ -131,7 +131,7 @@ char *dumpTB(TB tb, bool showLineNumbers) {
 	if (showLineNumbers == true) {
 		return showLineNumber(tb);
 	}
-	char *string = calloc(1, (tb->size)*sizeof(char) + 3);
+	char *string = calloc(1, (tb->size)*sizeof(char) + 3*tb->nitems);
 	if (string == NULL) {
 		fprintf(stderr, "Error in allocating memory for buffer");
 		abort();
@@ -162,7 +162,7 @@ static int checkSize(TB tb) {
 
 // Returns a string with line numbers
 static char *showLineNumber(TB tb) {
-	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 3*tb->nitems);
+	char *numString = calloc(1, checkSize(tb)*sizeof(char) + 5*tb->nitems);
 	if (numString == NULL) {
 		fprintf(stderr, "Error in allocating memory for buffer");
 		abort();
