@@ -37,7 +37,7 @@ struct textbuffer {
 
 
 int main(void) {
-	
+
 	testNewTB();
 	testMergeTB();
 	testPasteTB();
@@ -45,7 +45,7 @@ int main(void) {
 	// testSearchTB();
 	testRichPapa();
 	// TODO: Call more test functions
-	
+
 	printf("All tests passed! I'm AWESOME!\n");
 }
 
@@ -56,7 +56,7 @@ static void testNewTB(void) {
 
 	// Calling dumpTB immediately after newTB, without modifying the TB
 	printf("TEST 1: The Given String \n\n");
-	
+
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
 	// show(tb1);
 	assert(linesTB(tb1) == 4);
@@ -105,16 +105,16 @@ static void show(TB tb){
 
 // TODO: Add more test functions
 static void testMergeTB(void) {
-	
+
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
-	
+
 	assert(linesTB(tb1) == 4);
 
 	TB tb3 = newTB("I'm\nvery good\n");
 	assert(linesTB(tb3) == 2);
 
 	mergeTB(tb1, 5, tb3);
-	
+
 	assert(linesTB(tb1) == 6);
 	printf("\nTEST: VISUAL test after Merging \n\n");
 	show(tb1);
@@ -130,9 +130,6 @@ static void testMergeTB(void) {
 static void testPasteTB(void) {
 	TB tb1 = newTB("hello there,\nhow\nare\nthings\n");
 	assert(linesTB(tb1) == 4);
-	printf("\nTEST: VISUAL test after Same BUFFER  \n\n");
-	pasteTB(tb1, 2, tb1);
-	show(tb1);
 
 	TB tb3 = newTB("I'm\nvery good\n");
 	assert(linesTB(tb3) == 2);
@@ -145,6 +142,10 @@ static void testPasteTB(void) {
 	printf("\nChecking if we can still access the pasted buffer  \n\n");
 	show(tb3);
 
+	printf("\nTEST: VISUAL test after Same BUFFER  \n\n");
+	pasteTB(tb1, 2, tb1);
+	show(tb1);
+	
 	releaseTB(tb1);
 	releaseTB(tb3);
 }
