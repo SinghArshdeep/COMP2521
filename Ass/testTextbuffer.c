@@ -86,8 +86,8 @@ static void testNewTB(void) {
 	show(tb1);
 
 	releaseTB(tb1);
-	// releaseTB(tb3);
-	
+	releaseTB(tb3);
+	releaseTB(tb2);
 	printf("newTB tests passed!\n\n");
 }
 
@@ -116,12 +116,15 @@ static void testMergeTB(void) {
 	assert(linesTB(tb1) == 6);
 	printf("\nTEST: VISUAL test after Merging \n\n");
 	show(tb1);
+
 	printf("\nTEST: Calling dumstring  \n\n");
+
 	char *text = dumpTB(tb1, true);
 	printf("%s\n", text);
 	free(text);
 
 	releaseTB(tb1);
+	releaseTB(tb3);
 }
 
 static void testPasteTB(void) {
@@ -138,6 +141,7 @@ static void testPasteTB(void) {
 	assert(linesTB(tb1) == 6);
 	printf("\nChecking if we can still access the pasted buffer  \n\n");
 	show(tb3);
+
 	releaseTB(tb1);
 	releaseTB(tb3);
 }
@@ -150,10 +154,13 @@ static void testCutTB(void) {
 	TB tb = cutTB(tb1, 3, 5);
 	printf("\nTEST: VISUAL test after cut  \n\n");
 	show(tb1);
+
 	printf("\nTEST: Calling dumstring  \n\n");
 	char *text = dumpTB(tb, true);
 	printf("%s\n", text);
 	free(text);
+	releaseTB(tb1);
+	releaseTB(tb);
 }
 
 static void testSearchTB(void){
