@@ -430,12 +430,30 @@ Match searchTB(TB tb, char *search) {
 	if (search == NULL)
 		abort();
 	Node first = tb->first;
-	for (int i = 0; i < tb->nitems; i++)
-	{
-		int searchLen = strlen(search);
+	Match newList, prev;
+	newList = NULL;
+	int searchLen = strlen(search);
+	int found = 0;
+	for (int i = 0; i < tb->nitems; i++) {
+		char *string = first->value;
+		while ((string = strstr(string , search))) {
+			Match list = malloc(sizeof(Match));
+			list->lineNumber = i + 1;
+			list->columnNumber = (int)(string - first->value) + 1;
+			list->next = NULL;
+			string += searchLen;
+			if (newList == NULL)
+			{
+				newList = prev = list; 
+			}else {
+				prev->next = list;
+				prev = list;
+			}
+		}
 		first = first->next;
 	}
 	
+	return newList;
 	
 }
 

@@ -17,6 +17,7 @@ static void show(TB tb);
 static void testMergeTB(void);
 static void testPasteTB(void);
 static void testCutTB(void);
+static void testSearchTB(void);
 
 // TODO: Add more function prototypes
 
@@ -38,8 +39,9 @@ int main(void) {
 	
 	// testNewTB();
 	// testMergeTB();
-	testPasteTB();
-	// testCutTB();
+	// testPasteTB();
+	//testCutTB();
+	testSearchTB();
 	// TODO: Call more test functions
 	
 	printf("All tests passed! I'm AWESOME!\n");
@@ -142,4 +144,25 @@ static void testCutTB(void) {
 	TB tb = cutTB(tb1, 3, 5);
 	printf("\nTEST: VISUAL test after cut  \n\n");
 	show(tb1);
+	printf("\nTEST: Calling dumstring  \n\n");
+	char *text = dumpTB(tb, true);
+	printf("%s\n", text);
+	free(text);
+}
+
+static void testSearchTB(void){
+	TB tb1 = newTB("abracadabra alacazam\nabracadabracadabracadabracadabra\n");
+	char *str = "abracadabra";
+	Match list = searchTB(tb1, str);
+	Match curr = list;
+	while(curr != NULL){
+		printf("%d %d\n" , curr->lineNumber , curr->columnNumber);
+		curr = curr->next;
+	}
+	releaseTB(tb1);
+	while(list != NULL){
+	Match temp = list;
+	list = list->next;
+	free(temp);
+	}
 }
