@@ -31,7 +31,7 @@ static void checkBold(char *string, TB tb, Node curr);
  * in the given string.
  */
 TB newTB(char *text) {
-
+	// Initialising the new buffer 
 	TB buffer = malloc(sizeof(struct textbuffer));
 	if (buffer == NULL) {
 		fprintf(stderr, "Error in allocating memory for buffer");
@@ -46,6 +46,7 @@ TB newTB(char *text) {
 	buffer->nitems = 0;
 	buffer->first = buffer->last = NULL;
 
+	// if no string is passed return an empty buffer
 	if (text == NULL) {
 		return buffer;
 	}
@@ -58,6 +59,7 @@ TB newTB(char *text) {
 
 	char *string = strchr(textTemp , '\n');
 	char *data = textTemp;
+	// Loop to go through the whole string 
 	while (string != NULL) {
 		string[0] = '\0';
 		Node new = malloc(sizeof(struct TBNode)*sizeof(char));
@@ -72,10 +74,10 @@ TB newTB(char *text) {
 			abort();
 		}
 		strcpy(new->value, data);
+		// Add each node to the buffer 
 		if (buffer->last == NULL) {
 			buffer->first = buffer->last = new;
-		}else
-		{
+		}else {
 			buffer->last->next = new;
 			new->prev = buffer->last;
 			buffer->last = new;
@@ -83,8 +85,8 @@ TB newTB(char *text) {
 		data = &string[1];
 		string = strchr(data , '\n');
 		buffer->nitems++;
-		// printf("%d : %s\n", buffer->nitems, buffer->last->value);
 	}
+	// Free the external memory used 
 	free(textTemp);
 	return buffer;
 }
@@ -98,6 +100,7 @@ void releaseTB(TB tb) {
 		return;
 	}
 	Node curr = tb->first;
+	// Loop through the whole buffer
 	while (curr != NULL) {
 		Node next = curr->next;
 		freeNode (curr);
@@ -111,6 +114,7 @@ static void freeNode(Node curr) {
 	if (curr == NULL) {
 		return;
 	}
+	// Free the string and the node 
 	free(curr->value);
 	free(curr);
 }
@@ -120,9 +124,11 @@ static void freeNode(Node curr) {
  * the line number.
  */
 char *dumpTB(TB tb, bool showLineNumbers) {
+	// Return NULL if buffer is empty 
 	if (tb->first == NULL) {
 		return NULL;
 	}
+	// Pass to the function if numbers are needed
 	if (showLineNumbers == true) {
 		return showLineNumber(tb);
 	}
@@ -132,17 +138,17 @@ char *dumpTB(TB tb, bool showLineNumbers) {
 		abort();
 	}
 	Node temp = tb->first;
-
+	// Catenate all the strings into one string in a loop 
 	while (temp != NULL) {
 		strcat(string, temp->value);
 		strcat(string, "\n");
 		temp = temp->next;
 	}
-
+	// Return the string 
 	return string;
 }
 
-// Returns the size for the string
+// Returns the size needed for a string in accordance to the number of digits 
 static int checkSize(TB tb) {
 	int count = 0;
 	int n = tb->nitems;
@@ -168,8 +174,10 @@ static char *showLineNumber(TB tb) {
 
 	Node temp = tb->first;
 
+	// Catenate all the strings into one string in a loop 
 	while (temp != NULL) {
 		count++;
+		// Print the numbers as well 
 		sprintf(text, "%d", count);
 		num = text;
 		strcat(numString, num);
@@ -178,7 +186,6 @@ static char *showLineNumber(TB tb) {
 		strcat(numString, "\n");
 		temp = temp->next;
 	}
-
 	return numString;
 }
 
@@ -204,20 +211,23 @@ void addPrefixTB(TB tb, int from, int to, char *prefix) {
 	}
 	int count = 1;
 	Node temp = tb->first;
+	// Go to the node 
 	while (count < from ) {
 		count++;
 		temp = temp->next;
 	}
-	
+	// Catenate all the strings into one string in a loop 
 	while (count <= to) {
 		count++;
 		char *string = calloc(1, (2 + strlen(temp->value) + strlen(prefix)) * sizeof(char));
+		// Add the prefix to the string first 
 		strcpy(string, prefix);
 		strcat(string, temp->value);
 		free(temp->value);
 		temp->value = string;
 		temp = temp->next;
 	}
+	// Size if added for the string and the null characters 
 	tb->size = tb->size + ((2 + strlen(prefix)) * tb->nitems);
 }
 
@@ -236,6 +246,7 @@ void mergeTB(TB tb1, int pos, TB tb2) {
 		fprintf(stderr, "Line out of range");
 		abort();
 	}
+	// if tb1 is empty then return tb2 as tb1 
 	if (tb1->nitems == 0) {
 		tb1->first = tb2->first;
 		tb1->last = tb2->last;
@@ -248,12 +259,13 @@ void mergeTB(TB tb1, int pos, TB tb2) {
 		return;
 	}
 	int count = 1;
+	// Gets the previous node from the position 
 	Node temp = tb1->first;
 	while (count < (pos - 1)) {
 		count++;
 		temp = temp->next;
 	} 
-
+	// Add nodes of tb2 to tb1 at the proper position 
 	if (temp == tb1->first && pos == 1) {
 		tb1->first = tb2->first;
 		tb2->last->next = temp;
@@ -269,6 +281,7 @@ void mergeTB(TB tb1, int pos, TB tb2) {
 		tb2->last->next = new;
 		new->prev = tb2->last;
 	}
+	// Update the size and number of items 
 	tb1->nitems += tb2->nitems;
 	tb1->size += tb2->size;
 	if (tb1->last == NULL) {
@@ -295,8 +308,8 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	if (tb2->nitems == 0) {
 		return;
 	}
-	if (pos == tb1->nitems + 1)
-	{
+	// Call function pasteLastTb if we need to add lines after tb1 
+	if (pos == tb1->nitems + 1) {
 		pasteLastTB(tb1, tb2);
 		return;
 	}
@@ -304,10 +317,12 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	int count = 1;
 	Node temp = tb1->first;
 	Node last = NULL;
+	// Find the previous node to the position 
 	while (count < (pos - 1)) {
 		count++;
 		temp = temp->next;
 	}
+	// check the position and choose the last node 
 	if (pos == 1) {
 		last = temp;
 	}else {
@@ -315,10 +330,21 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	}
 	int found = 0;
 	Node first2 = tb2->first;
+	// Loop through tb2 to add all the lines to tb1 
 	while (first2 != NULL) {	
+		// Find the correct position in the buffer
 		if (temp == tb1->first && pos == 1 && found == 0) {
+			// Allocate memory for all the new nodes 
 			Node new = malloc(sizeof(struct TBNode));
+			if (new == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+			}
 			new->value = calloc(1, (strlen(first2->value) + 1)*sizeof(char));
+			if (new->value == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+			}
 			strcpy(new->value, first2->value);
 			new->prev = NULL;
 			tb1->first = new;
@@ -326,6 +352,7 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 			first2 = first2->next;
 			found++;
 		}else {
+			// Allocate memory and merge into the buffer 
 			Node new = malloc(sizeof(struct TBNode));
 			new->value = calloc(1, (strlen(first2->value) + 1)*sizeof(char));
 			strcpy(new->value, first2->value);
@@ -334,8 +361,10 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 			temp = new;
 			first2 = first2->next;
 		}
+		// Make sure the size is updated 
 		tb1->size += strlen(temp->value);
 	}
+	// Update all the values for the buffer 
 	temp->next = last;
 	last->prev = temp;
 	tb1->nitems += tb2->nitems;
@@ -344,18 +373,31 @@ void pasteTB(TB tb1, int pos, TB tb2) {
 	}
 }
 
+// Function to add lines in buffer 2 to the end of buffer 1
 static void pasteLastTB(TB tb1, TB tb2) {
 	Node last = tb2->first;
+	// Loop through all the items in buffer 2 
 	for (int i = 0; i < tb2->nitems; i++)
 	{
+		// Allocate memory for the new node and line
 		Node new = malloc(sizeof(struct TBNode));
+		if (new == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+		}
 		new->value = calloc(1, (strlen(last->value) + 1)*sizeof(char));
+		if (new->value == NULL) {
+			fprintf(stderr, "Error in allocating memory for line");
+			abort();
+		}
 		strcpy(new->value, last->value);
+		// Find the proper postion for the node 
 		new->next = NULL;
 		tb1->last->next = new;
 		new->prev = tb1->last;
 		last = last->next;
 		tb1->last = new;
+		// Update items forthe buffer 
 		tb1->size += strlen(new->value);
 		tb1->nitems++;
 	}
@@ -369,30 +411,36 @@ static void pasteLastTB(TB tb1, TB tb2) {
  *   is out of range.
  */
 TB cutTB(TB tb, int from, int to) {
+	// Check for valid range 
 	if (to < from)
 		return NULL;
 	if (from < 1 || to > tb->nitems) {
 		fprintf(stderr, "Lines out of range\n");
 		abort();
 	}
+	// Check for empty buffer 
 	if (tb->nitems == 0) {
 		fprintf(stderr, "Can not delete lines in an empty buffer\n");
 		abort();
 	}
+	// Allocate memory for new buffer 
 	TB buffer = malloc(sizeof(struct textbuffer));
 	if (buffer == NULL) {
 		fprintf(stderr, "Error in allocating memory\n");
 		abort();
 	}
+	// Initialize the buffer 
 	buffer->nitems = 0;
 	buffer->size = 0;
 	buffer->first = buffer->last = NULL;
 	int count = 1;
 	Node temp = tb->first;
+	// Find the node at the position 
 	while (count < from) {
 		count++;
 		temp = temp->next;
 	}
+	// Loop through the list to find the deleting nodes 
 	while(count <= to ) {
 		Node new = malloc(sizeof(struct TBNode));
 		if (new == NULL) {
@@ -406,6 +454,7 @@ TB cutTB(TB tb, int from, int to) {
 			abort();
 		}
 		strcpy(new->value, temp->value);
+		// Find the correct position in the buffer 
 		if (buffer->last == NULL) {
 			buffer->first = buffer->last = new;
 		}else {
@@ -413,6 +462,7 @@ TB cutTB(TB tb, int from, int to) {
 			new->prev = buffer->last;
 			buffer->last = new;
 		}
+		// Update the pointer and the items in the buffer 
 		temp = temp->next;
 		buffer->nitems++;
 		buffer->size += strlen(new->value);
@@ -435,14 +485,23 @@ Match searchTB(TB tb, char *search) {
 	Match newList, prev;
 	newList = NULL;
 	int searchLen = strlen(search);
+	// Loop through all the lines in the buffer 
 	for (int i = 0; i < tb->nitems; i++) {
 		char *string = first->value;
+		// Check for occurences in a single string 
 		while ((string = strstr(string , search))) {
+			// Allocate memory for new node 
 			Match list = malloc(sizeof(matchNode));
+			if (list == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+			}
+			// Calculate values for the items in struct match 
 			list->lineNumber = i + 1;
 			list->columnNumber = (int)(string - first->value) + 1;
 			list->next = NULL;
 			string += searchLen;
+			// Add to the list 
 			if (newList == NULL)
 			{
 				newList = prev = list; 
@@ -453,9 +512,7 @@ Match searchTB(TB tb, char *search) {
 		}
 		first = first->next;
 	}
-	
 	return newList;
-	
 }
 
 /**
@@ -465,6 +522,7 @@ Match searchTB(TB tb, char *search) {
  *   is out of range.
  */
 void deleteTB(TB tb, int from, int to) {
+	// Check for valid range 
 	if (to < from) {
 		fprintf(stderr, "Invalid arguments please check");
 		abort();
@@ -473,41 +531,42 @@ void deleteTB(TB tb, int from, int to) {
 		fprintf(stderr, "Lines out of range\n");
 		abort();
 	}
+	// Check for empty buffer 
 	if (tb->nitems == 0) {
 		fprintf(stderr, "Can not delete lines in an empty buffer\n");
 		abort();
 	}
 	int count = 1;
 	Node temp = tb->first;
+	// Find the node at the correct position 
 	while (count < from) {
 		count++;
 		temp = temp->next;
 	}
+	// Loop after the position node 
 	while (count <= to) {
-		if (temp == tb->first)
-		{
+		// Check for the placement for each node 
+		// Execute code for deleting the node 
+		if (temp == tb->first) {
 			Node delete = temp;
 			tb->first = temp->next;
 			temp = temp->next;
 			temp->prev = NULL;
 			freeNode(delete);
-		}
-		else if (temp == tb->last)
-		{
+		}else if (temp == tb->last) {
 			Node delete = temp;
 			tb->last = temp->prev;
 			temp = temp->prev;
 			temp->next = NULL;
 			freeNode(delete);
-		}
-		else
-		{
+		}else {
 			Node delete = temp;
 			temp->prev->next = temp->next;
 			temp->next->prev = temp->prev;
 			temp = temp->next;
 			freeNode(delete);
 		}
+		// Update the number of items in the buffer
 		tb->nitems--;
 		count++;
 	}
@@ -521,25 +580,36 @@ void deleteTB(TB tb, int from, int to) {
  */
 void formRichText(TB tb) {
 	Node curr = tb->first;
+	// Loop through all the lines in the buffer 
 	while (curr != NULL)
 	{
 		checkHash(curr->value, tb, curr);
-		checkBold(curr->value, tb, curr);
+		// checkBold(curr->value, tb, curr);
 		curr = curr->next;
 	}
 	
 }
 
+// Function to check the occurence of hash in the given line 
+// Execute code if hash if found 
 static void checkHash(char *string, TB tb, Node curr) {
+	// Check if a hash is present 
 	if (strncmp(string, "#", 1) == 0)
 	{
 		Node new = curr;
+		// Allocate new memory for the line
 		new->value = calloc(1, (strlen(string) + 10)*sizeof(char));
+		if (new->value == NULL) {
+			fprintf(stderr, "Error in allocating memory for buffer");
+			abort();
+		}
+		// Catenate strings to the new string 
 		tb->size += 10;
 		strcpy(new->value, "<h1>");
 		string++;
 		strcat(new->value, string);
 		strcat(new->value, "</h1>");
+		// Free memory for old string 
 		free(curr->value);
 		curr->value = new->value;
 	}
@@ -548,13 +618,42 @@ static void checkHash(char *string, TB tb, Node curr) {
 
 
 static void checkBold(char *string, TB tb, Node curr) {
-	char *new = strchr(string, '*');
-	char *prev, *next;
-	while (new != NULL && strlen(string) > 2)
-	{
-		prev = new;
+	
+	// char *text = malloc(strlen(string)*sizeof(char) + 1);
+	// strcpy(text, string);
+	// char *new = strchr(text, '*');
+	// char *textTemp = text;
+	// char *prev, *next, *temp;
+	// int count, beforeLen;
+	// printf("reches afes");
+	// while (new != NULL && strlen(string) > 2)
+	// {
+	// 	printf("reches here");
+	// 	prev = new;
+	// 	textTemp = &new[1];
+	// 	new = strchr(textTemp, '*');
+	// 	int count = (int)(new - prev);
+	// 	if (count > 0)
+	// 	{
+	// 		temp = prev;
+	// 		temp++;
+	// 		beforeLen = (int)(prev - string);
+	// 		Node copy = curr;
+	// 		copy->value = calloc(1, (strlen(string) + 6)*sizeof(char));
+	// 		tb->size += 6;
+	// 		strncpy(copy->value, string, beforeLen);
+	// 		strcat(copy->value, "<i>");
+	// 		strncat(copy->value, temp, count);
+	// 		free(curr->value);
+	// 		curr->value = copy->value;
+	// 		textTemp = &new[1];
+	// 		new = strchr(textTemp, '*');
+	// 	}else
+	// 	{
+	// 		continue;
+	// 	}
 		
-	}
+	// }
 	
 }
 
