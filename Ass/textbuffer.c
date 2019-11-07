@@ -520,8 +520,9 @@ static void checkHash(char *string, TB tb, Node curr) {
 		strcat(new->value, string);
 		strcat(new->value, "</h1>");
 		// Free memory for old string 
-		free(curr->value);
+		char *delete = curr->value;
 		curr->value = new->value;
+		free(delete);
 	}
 	return;
 }

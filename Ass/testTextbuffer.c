@@ -187,11 +187,11 @@ static void testSearchTB(void){
 
 
 static void testRichPapa(void) {
-	TB tb1 = newTB("hello *there*,\n##\nhow\nare\nthings!\nTell\nme\n");
+	TB tb1 = newTB("hello *there*,\n##\nhow\nare\nthings!\n#Tell\nme\n");
 	show(tb1);
 	formRichText(tb1);
 	show(tb1);
 
-	releaseTB(tb1);
+	// releaseTB(tb1);
 	return;
 }
