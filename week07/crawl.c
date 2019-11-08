@@ -60,24 +60,11 @@ int main (int argc, char **argv)
 	//    close the opened URL
 	//    sleep(1)
 	// }
-	if (!(handle = url_fopen (firstURL, "r"))) {
-		fprintf (stderr, "Couldn't open %s\n", next);
-		exit (1);
-	}
-	while (!url_feof (handle)) {
-		url_fgets (buffer, sizeof (buffer), handle);
-		// fputs(buffer,stdout);
-		int pos = 0;
-		char result[BUFSIZE];
-		memset (result, 0, BUFSIZE);
-		while ((pos = GetNextURL (buffer, firstURL, result, pos)) > 0) {
-			printf ("Found: '%s'\n", result);
-			memset (result, 0, BUFSIZE);
-		}
-	}
-	url_fclose (handle);
-	sleep (1);
-	return 0;
+	
+	Stack todo = newStack();
+	pushOnto(todo, firstURL);
+	Graph URLs = newGraph(maxURLs);
+	Set seen = newSet();
 }
 
 // setFirstURL(Base,First)
