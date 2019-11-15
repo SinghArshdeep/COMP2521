@@ -7,6 +7,8 @@
 #include "Dijkstra.h"
 #include "PQ.h"
 
+static void freeList(PredNode *temp);
+
 ShortestPaths dijkstra(Graph g, Vertex src)
 {
     ShortestPaths *paths = malloc(sizeof(struct ShortestPaths));

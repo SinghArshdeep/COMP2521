@@ -24,7 +24,7 @@ BSTree.o : BSTree.c BSTree.h
 	$(CC)  -c   BSTree.c  
 
 LanceWilliamsHAC.o : LanceWilliamsHAC.c Graph.o  BSTree.o 
-	$(CC)  $(CFLAGS) -c  -o LanceWilliamsHAC.o LanceWilliamsHAC.c    
+	$(CC)  $(CFLAGS) -c  -o LanceWilliamsHAC.o LanceWilliamsHAC.c 
 
 testLanceWilliamsHAC : testLanceWilliamsHAC.c Graph.h  Graph.o LanceWilliamsHAC.o BSTree.o GraphRead.o
 	$(CC)   -o  testLanceWilliamsHAC testLanceWilliamsHAC.c Graph.o BSTree.o GraphRead.o LanceWilliamsHAC.o  -lm
