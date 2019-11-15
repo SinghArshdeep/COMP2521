@@ -60,11 +60,16 @@ int main (int argc, char **argv)
 	//    close the opened URL
 	//    sleep(1)
 	// }
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> e5652dbee57d7675f4bcd25ce16902a3532eb2fa
 	Stack todo = newStack();
 	pushOnto(todo, firstURL);
 	Graph URLs = newGraph(maxURLs);
 	Set seen = newSet();
+<<<<<<< HEAD
 	while (!emptyStack(todo) && nVertices(URLs) < maxURLs) {
 		char *temp = popFrom(todo);
 		if (!(handle = url_fopen(temp, "r"))) {
@@ -101,6 +106,8 @@ int main (int argc, char **argv)
 	dropSet(seen);
 
 	return 0;
+=======
+>>>>>>> e5652dbee57d7675f4bcd25ce16902a3532eb2fa
 }
 
 // setFirstURL(Base,First)
