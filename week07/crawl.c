@@ -25,7 +25,7 @@ int main (int argc, char **argv)
 	char buffer[BUFSIZE];
 	char baseURL[BUFSIZE];
 	char firstURL[BUFSIZE];
-	char next[BUFSIZE];
+	// char next[BUFSIZE];
 	int maxURLs;
 
 	if (argc > 2) {
@@ -60,23 +60,46 @@ int main (int argc, char **argv)
 	//    close the opened URL
 	//    sleep(1)
 	// }
-	if (!(handle = url_fopen (firstURL, "r"))) {
-		fprintf (stderr, "Couldn't open %s\n", next);
-		exit (1);
-	}
-	while (!url_feof (handle)) {
-		url_fgets (buffer, sizeof (buffer), handle);
-		// fputs(buffer,stdout);
-		int pos = 0;
-		char result[BUFSIZE];
-		memset (result, 0, BUFSIZE);
-		while ((pos = GetNextURL (buffer, firstURL, result, pos)) > 0) {
-			printf ("Found: '%s'\n", result);
-			memset (result, 0, BUFSIZE);
+
+	Stack todo = newStack();
+	pushOnto(todo, firstURL);
+	Graph URLs = newGraph(maxURLs);
+	Set seen = newSet();
+	while (!emptyStack(todo) && nVertices(URLs) < maxURLs) {
+		char *temp = popFrom(todo);
+		if (!(handle = url_fopen(temp, "r"))) {
+			fprintf(stderr,"Couldn't open %s\n", temp);
+			continue;
 		}
+		
+		while(!url_feof(handle)) {
+			url_fgets(buffer,sizeof(buffer),handle);
+			int pos = 0;
+			char result[BUFSIZE];
+			memset(result,0,BUFSIZE);
+			while ((pos = GetNextURL(buffer, firstURL, result, pos)) > 0) {
+				if ((nVertices(URLs) < maxURLs) ||
+				    isConnected(URLs, temp, result)) {
+					addEdge(URLs, temp, result);
+				}
+				if (!isElem(seen, result)) {
+					printf("Found: '%s'\n",result);
+					insertInto(seen, result);
+					pushOnto(todo, result);
+				}
+				memset(result,0,BUFSIZE);
+			}
+		}
+		url_fclose(handle);
+		sleep(1);
 	}
-	url_fclose (handle);
-	sleep (1);
+	showGraph(URLs,0);
+    showGraph(URLs,1);
+
+	dropGraph(URLs);
+	dropStack(todo);
+	dropSet(seen);
+
 	return 0;
 }
 
@@ -98,3 +121,4 @@ static void setFirstURL (char *base, char *first)
 		strcat (first, "/index.html");
 	}
 }
+

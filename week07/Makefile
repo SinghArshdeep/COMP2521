@@ -1,6 +1,6 @@
 # COMP2521 19T1 ... week 7 lab
 
-CC	= 2521 3c
+CC	= gcc
 
 .PHONY: all
 all: ts tq tk tg crawl
