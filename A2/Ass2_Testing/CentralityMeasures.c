@@ -9,22 +9,25 @@
 #include "PQ.h"
 
 NodeValues closenessCentrality(Graph g) {
+	GraphOutIncident(g, 0);
 	NodeValues nvs = {0};
 	return nvs;
 }
 
 NodeValues betweennessCentrality(Graph g) {
+	GraphOutIncident(g, 0);
 	NodeValues nvs = {0};
 	return nvs;
 }
 
 NodeValues betweennessCentralityNormalised(Graph g) {
+	GraphOutIncident(g, 0);
 	NodeValues nvs = {0};
 	return nvs;
 }
 
 void showNodeValues(NodeValues nvs) {
-
+	
 }
 
 void freeNodeValues(NodeValues nvs) {

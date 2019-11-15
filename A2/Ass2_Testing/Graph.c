@@ -40,8 +40,8 @@ Graph GraphNew(int nVertices) {
 	}
 	
 	g->nV = nVertices;
-	g->outLinks = calloc(nVertices, sizeof(AdjList));
-	g->inLinks  = calloc(nVertices, sizeof(AdjList));
+	g->outLinks = calloc((unsigned long)nVertices, sizeof(AdjList));
+	g->inLinks  = calloc((unsigned long)nVertices, sizeof(AdjList));
 	
 	if (g->outLinks == NULL || g->inLinks == NULL) {
 		fprintf(stderr, "Couldn't allocate Graph!\n");

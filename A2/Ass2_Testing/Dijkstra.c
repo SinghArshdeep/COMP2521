@@ -37,26 +37,31 @@ ShortestPaths dijkstra(Graph g, Vertex src)
     // Add all elements into the queue to be accessed later 
     for (int i = 0; i < vertices; i++)
     {
-        ItemPQ *item = malloc(sizeof(struct ItemPQ));
-        item->key = i;
-        item->value = 999999;
-        PQAdd(q, *item);
+        ItemPQ item;
+        item.key = i;
+        item.value = 999999;
+        PQAdd(q, item);
     }
-    ItemPQ *item = malloc(sizeof(struct ItemPQ));
-    item->key = src;
-    item->value = 0;
-    PQAdd(q, *item);
+    ItemPQ item;
+    item.key = src;
+    item.value = 0;
+    PQAdd(q, item);
     
     while (!PQIsEmpty(q))
     {
         // printf("Loop: %d\n", i);
         ItemPQ v = PQDequeue(q);
-        if (GraphOutIncident(g, v.key) == NULL)
+        AdjList list = GraphOutIncident(g, v.key);
+        if (list == NULL && v.key == src)
+        {
+            break;
+        }else if (list == NULL && v.key < src)
         {
             break;
         }
+        
         // printf("ITEM: %d\n", v.key);
-        AdjList list = GraphOutIncident(g, v.key);
+        
         while (list != NULL)
         {
             // printf("Key is: %d\n", list->v);
@@ -80,7 +85,7 @@ ShortestPaths dijkstra(Graph g, Vertex src)
                 freeList(paths->pred[list->v]->next);
                 paths->pred[list->v]->v = v.key;
             }
-            else if (paths->dist[list->v] == (paths->dist[v.key] + list->weight))
+            else if (paths->dist[list->v] == (paths->dist[v.key] + list->weight) )
             {
                 PredNode *temp = malloc(sizeof(struct PredNode));
                 temp->v = v.key;
