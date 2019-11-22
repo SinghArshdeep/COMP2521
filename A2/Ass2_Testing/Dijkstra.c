@@ -7,32 +7,34 @@
 
 #include "Dijkstra.h"
 #include "PQ.h"
-static void freeList(PredNode *temp);
+// Declaration for static function
+// static void freeList(PredNode *temp);
 
+/*
+ * The  function  returns  a 'ShortestPaths' structure with the required
+ * information:
+ * - the number of vertices in the graph
+ * - the source vertex
+ * - distance array
+ * - array of predecessor lists
+ */
 ShortestPaths dijkstra(Graph g, Vertex src)
 {
     // Initialise the memory needed
-    ShortestPaths *paths = malloc(sizeof(struct ShortestPaths));
+    ShortestPaths paths;
     int vertices = GraphNumVertices(g);
-    paths->numNodes = vertices;
-    paths->src = src;
-    paths->dist = calloc(vertices, sizeof(int));
-    paths->pred = calloc(vertices, sizeof(PredNode *));
-
-    // Initialize the visited array 
-    // Vertex *visited = calloc(vertices, sizeof(int));
-	// for (int i = 0; i < vertices; i++)
-	// {
-	// 	visited[i] = -1;
-	// }
+    paths.numNodes = vertices;
+    paths.src = src;
+    paths.dist = calloc(vertices, sizeof(int));
+    paths.pred = calloc(vertices, sizeof(PredNode *));
 
     // Initialise the distance and pred array 
     for (int i = 0; i < vertices; i++)
     {
-        paths->dist[i] = 999999;
-        paths->pred[i] = NULL;
+        paths.dist[i] = 999999;
+        paths.pred[i] = NULL;
     }
-    paths->dist[src] = 0;
+    paths.dist[src] = 0;
     PQ q = PQNew();
 
     // Add all elements into the queue to be accessed later 
@@ -51,69 +53,47 @@ ShortestPaths dijkstra(Graph g, Vertex src)
     
     while (!PQIsEmpty(q))
     {
-        // printf("Loop: %d\n", i);
         ItemPQ v = PQDequeue(q);
-        // printf("ITEM: %d\n", v.key);
         AdjList list = GraphOutIncident(g, v.key);
         while (list != NULL)
         {
-
-            // printf("Key is: %d\n", list->v);
-            // if (visited[list->v] == -1)
-            // {
-            //     ItemPQ item;
-            //     item.key = list->v;
-            //     item.value = list->weight;
-            //     PQAdd(q, item);
-            //     visited[list->v] = v.key;
-
-            //     PredNode *temp = malloc(sizeof(struct PredNode));
-            //     temp->v = v.key;
-            //     temp->next = NULL;
-            //     paths->pred[list->v] = temp;
-            //     paths->dist[list->v] = list->weight + paths->dist[v.key];
-            // }
-            if (paths->dist[list->v] > (paths->dist[v.key] + list->weight))
+            if (paths.dist[list->v] > (paths.dist[v.key] + list->weight))
             {
                 ItemPQ item;
                 item.key = list->v;
-                item.value = paths->dist[v.key] + list->weight;
+                item.value = paths.dist[v.key] + list->weight;
                 PQAdd(q, item);
 
                 // Change distance array 
-                paths->dist[list->v] = list->weight + paths->dist[v.key];
-                freeList(paths->pred[list->v]);
+                paths.dist[list->v] = list->weight + paths.dist[v.key];
+                // freeList(paths.pred[list->v]);
 
                 // Change the pred array 
                 PredNode *temp = malloc(sizeof(struct PredNode));
                 temp->v = v.key;
                 temp->next = NULL;
-                paths->pred[list->v] = temp;
+                paths.pred[list->v] = temp;
             }
-            else if (paths->dist[list->v] == (paths->dist[v.key] + list->weight))
+            else if (paths.dist[list->v] == (paths.dist[v.key] + list->weight))
             {
                 PredNode *temp = malloc(sizeof(struct PredNode));
                 temp->v = v.key;
-                temp->next = paths->pred[list->v];
-                paths->pred[list->v] = temp;
+                temp->next = paths.pred[list->v];
+                paths.pred[list->v] = temp;
             }
-            
             list = list->next;
         }
     
     }
-    // freeList(paths->pred[src]);
-    // paths->pred[src] = NULL;
-
     for (int i = 0; i < vertices; i++)
     {
-        if (paths->dist[i] == 999999)
+        if (paths.dist[i] == 999999)
         {
-            paths->dist[i] -= 999999;
+            paths.dist[i] -= 999999;
         }
     }
 
-    return *paths;
+    return paths;
 }
 
 void showShortestPaths(ShortestPaths sps) {
@@ -124,17 +104,17 @@ void freeShortestPaths(ShortestPaths sps) {
 
 }
 
-static void freeList(PredNode *temp)
-{
-    if (temp == NULL)
-        return;
-    // PredNode *first = temp;
-    while (temp != NULL)
-    {
-        PredNode *del = temp;
-        temp = temp->next;
-        del->next = NULL;
-        free(del);
-    }
-    // first = NULL;
-}
+// Free up memory used by the 
+// static void freeList(PredNode *temp)
+// {
+//     if (temp == NULL)
+//         return;
+
+//     while (temp != NULL)
+//     {
+//         PredNode *del = temp;
+//         temp = temp->next;
+//         del->next = NULL;
+//         free(del);
+//     }
+// }
